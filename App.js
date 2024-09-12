@@ -1,10 +1,10 @@
-import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import Header from "./Header";
-import Errors from "./Errors";
-import Main from "./Main";
+
+import Header from "./pages/Header";
+import Main from "./pages/Main";
+import Tabs from "./pages/Tabs";
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -13,6 +13,7 @@ export default function App() {
       <Stack.Navigator
         screenOptions={{
           headerTitle: () => <Header />,
+          headerTitleAlign: "left",
           // headerStyle: { backgroundColor: "#E8FFE2" },
         }}
       >
@@ -21,7 +22,7 @@ export default function App() {
           component={Main}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="error" component={Errors} />
+        <Stack.Screen name="tabs" component={Tabs} />
       </Stack.Navigator>
     </NavigationContainer>
   );

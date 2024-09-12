@@ -1,9 +1,13 @@
 import { View, Text, Dimensions, ActivityIndicator } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Image } from "react-native";
-import { StatusBar } from "expo-status-bar";
-
-export default function Main() {
+export default function Main({ navigation }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace("tabs");
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [navigation]);
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -16,7 +20,7 @@ export default function Main() {
       >
         <View style={{ flex: 8 }}>
           <Image
-            source={require("./assets/logo.png")}
+            source={require("../assets/logo.png")}
             style={{ resizeMode: "contain", width: 250, marginTop: 240 }}
           />
         </View>
@@ -26,8 +30,8 @@ export default function Main() {
       </View>
       <View style={{ flex: 1 }}>
         <Image
-          source={require("./assets/main.png")}
-          style={{ width: Dimensions.get("window").width, height: 400 }}
+          source={require("../assets/main.png")}
+          style={{ resizeMode: "cover", height: "100%", width: "100%" }}
         />
       </View>
     </View>
