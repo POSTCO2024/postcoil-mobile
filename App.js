@@ -1,9 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Header from "./pages/Header";
+import Header from "./components/Header";
 import Main from "./pages/Main";
-import Tabs from "./pages/Tabs";
+import Tabs from "./components/Tabs";
 
 const Stack = createNativeStackNavigator();
 export default function App() {

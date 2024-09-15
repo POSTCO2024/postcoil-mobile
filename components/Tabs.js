@@ -1,11 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Errors from "./Errors";
-import Targets from "./Targets";
-import WorkInstruction from "./WorkInstruction";
+import Errors from "../pages/Errors";
+import Targets from "../pages/Targets";
+import WorkInstruction from "../pages/WorkInstruction";
 const Tab = createBottomTabNavigator();
 
 export const Tabs = () => {
@@ -54,5 +52,3 @@ export const Tabs = () => {
 };
 
 export default Tabs;
-
-const styles = StyleSheet.create({});
