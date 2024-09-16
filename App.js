@@ -1,10 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { Text } from "react-native";
 import Header from "./components/Header";
 import Main from "./pages/Main";
 import Tabs from "./components/Tabs";
 
+const defaultText = Text.defaultText || {};
+Text.defaultText = { ...defaultText, style: { color: "#262627" } };
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
