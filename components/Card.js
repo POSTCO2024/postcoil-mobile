@@ -30,7 +30,7 @@ export const Card = ({ error }) => {
         <View style={errorColor}>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: 600,
             }}
           >
@@ -59,9 +59,11 @@ export const Card = ({ error }) => {
         </View>
       </View>
       <View style={styles.line}></View>
-      <View>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TextInput
           style={{
+            height: "50%",
+            flex: 7,
             borderColor: "grey",
             borderWidth: 1,
             padding: "1%",
@@ -71,15 +73,31 @@ export const Card = ({ error }) => {
           }}
           multiline={true}
         />
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            marginLeft: "2%",
+            borderRadius: 6,
+            backgroundColor: "#83DB89",
+            height: "50%",
+            paddingVertical: "1%",
+          }}
+        >
+          <Text
+            style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
+          >
+            등록
+          </Text>
+        </TouchableOpacity>
       </View>
-      <View
+      {/* <View
         style={{
           flexDirection: "row",
           paddingBottom: "3%",
           justifyContent: "space-between",
         }}
-      >
-        <TouchableOpacity
+      > */}
+      {/* <TouchableOpacity
           style={{
             width: "49%",
             borderWidth: 1,
@@ -94,24 +112,24 @@ export const Card = ({ error }) => {
           >
             수정
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            width: "49%",
-            borderRadius: 6,
-            backgroundColor: "#83DB89",
-            height: "100%",
-            paddingVertical: "1%",
-          }}
+        </TouchableOpacity> */}
+      {/* <TouchableOpacity
+        style={{
+          width: "49%",
+          borderRadius: 6,
+          backgroundColor: "#83DB89",
+          height: "100%",
+          paddingVertical: "1%",
+        }}
+      >
+        <Text
+          style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
         >
-          <Text
-            style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
-          >
-            등록
-          </Text>
-        </TouchableOpacity>
-      </View>
+          등록
+        </Text>
+      </TouchableOpacity> */}
     </View>
+    // </View>
   );
 };
 
