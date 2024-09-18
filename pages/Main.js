@@ -2,12 +2,12 @@ import { View, Text, Dimensions, ActivityIndicator } from "react-native";
 import React, { useEffect } from "react";
 import { Image } from "react-native";
 export default function Main({ navigation }) {
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     navigation.replace("tabs");
-  //   }, 3000);
-  //   return () => clearTimeout(timer);
-  // }, [navigation]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace("tabs");
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [navigation]);
   return (
     <View style={{ flex: 1 }}>
       <View

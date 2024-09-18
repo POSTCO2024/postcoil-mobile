@@ -16,6 +16,7 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
+import { DataTable } from "react-native-paper";
 
 const headerData = [
   "현공정",
@@ -182,28 +183,50 @@ const heightArr = new Array(11).fill("9%");
 export const TableChart = () => {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: "row", width: "90%" }}>
-        <Table
-          borderStyle={{
-            borderWidth: 1,
-          }}
-          style={{ width: "20%", height: "100%" }}
-        >
-          <Col data={materialNo} textStyle={{ textAlign: "center" }} />
-        </Table>
-        <ScrollView horizontal={true}>
-          <Table borderStyle={{ borderWidth: 1 }} style={{ height: "9%" }}>
-            <Row
-              data={headerData}
-              widthArr={widthArr}
-              style={{ height: "9%" }}
-            />
-          </Table>
-          <Table borderStyle={{ borderWidth: 1 }}>
-            <Rows data={data} widthArr={widthArr} style={{ height: "9%" }} />
-          </Table>
-        </ScrollView>
-      </View>
+      <ScrollView horizontal={true}>
+        <DataTable>
+          <DataTable.Header style={{ borderColor: "black" }}>
+            {headerData.map((header, index) => (
+              <DataTable.Title
+                key={index}
+                style={{
+                  borderColor: "black",
+                  width: 200,
+                  borderRightWidth: 1,
+
+                  justifyContent: "center",
+                }}
+                textStyle={{
+                  textAlign: "center",
+                  fontSize: 20,
+                  fontWeight: 800,
+                }}
+              >
+                {header}
+              </DataTable.Title>
+            ))}
+          </DataTable.Header>
+
+          {data.map((rowData, rowIndex) => (
+            <DataTable.Row key={rowIndex} style={{ borderColor: "black" }}>
+              {rowData.map((cellData, cellIndex) => (
+                <DataTable.Cell
+                  key={cellIndex}
+                  style={{
+                    borderColor: "black",
+                    width: 200,
+                    borderRightWidth: 1,
+                    justifyContent: "center",
+                  }}
+                  textStyle={{ textAlign: "center" }}
+                >
+                  {cellData}
+                </DataTable.Cell>
+              ))}
+            </DataTable.Row>
+          ))}
+        </DataTable>
+      </ScrollView>
     </View>
   );
 };
