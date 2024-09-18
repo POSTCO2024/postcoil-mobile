@@ -2,11 +2,11 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
 import React from "react";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const headerData = [
   "현공정",
@@ -170,162 +170,211 @@ const data = [
 
 export const TableChart = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        backgroundColor: "#ffffff",
-        borderRadius: 10,
-        borderColor: "#BFF6C3",
-        borderWidth: 2,
-        elevation: 5,
-        shadowColor: "#dddddd",
-        shadowOpacity: 1,
-        shadowOffset: { width: 0, height: 0 },
-        shadowRadius: 6,
-      }}
-    >
-      <View style={{ flex: 3 }}>
-        <View
-          style={{
-            height: "10%",
-            justifyContent: "center",
-            borderBottomWidth: 1,
-            borderRightWidth: 1,
-            borderColor: "#dddddd",
-            backgroundColor: "#83DB89",
-            borderTopLeftRadius: 8,
-          }}
-        >
-          <Text
+    <View style={{ flex: 1, width: "100%" }}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          backgroundColor: "#ffffff",
+          borderRadius: 10,
+          borderColor: "#BFF6C3",
+          borderWidth: 2,
+          elevation: 5,
+          shadowColor: "#dddddd",
+          shadowOpacity: 1,
+          shadowOffset: { width: 0, height: 0 },
+          shadowRadius: 6,
+        }}
+      >
+        <View style={{ flex: 3 }}>
+          <View
             style={{
-              fontSize: 20,
-              fontWeight: 600,
-              textAlign: "center",
-              textAlignVertical: "center",
-              color: "white",
+              height: "10%",
+              justifyContent: "center",
+              borderBottomWidth: 1,
+              borderRightWidth: 1,
+              borderColor: "#dddddd",
+              backgroundColor: "#83DB89",
+              borderTopLeftRadius: 8,
             }}
           >
-            {" "}
-            재료 번호
-          </Text>
-        </View>
-        {materialNo.map((material, index) => (
-          <View
-            key={index}
-            style={[
-              {
-                height: "9%",
-                justifyContent: "center",
-                borderBottomWidth: 1,
-                borderRightWidth: 1,
-                borderColor: "#dddddd",
-              },
-              index == materialNo.length - 1 && { borderBottomWidth: 0 },
-              index % 2 != 0 && { backgroundColor: "#E8FFE2" },
-              //  회색 #eeeeee
-            ]}
-          >
             <Text
-              key={index}
               style={{
+                fontSize: 20,
+                fontWeight: 600,
                 textAlign: "center",
                 textAlignVertical: "center",
-                fontSize: 16,
-                fontWeight: 600,
+                color: "white",
               }}
             >
-              {material}
+              {" "}
+              재료 번호
             </Text>
           </View>
-        ))}
-      </View>
-      <View style={{ flex: 8 }}>
-        <View>
-          <ScrollView horizontal={true}>
-            <View style={{ flexDirection: "column" }}>
-              <View
+          {materialNo.map((material, index) => (
+            <View
+              key={index}
+              style={[
+                {
+                  height: "9%",
+                  justifyContent: "center",
+                  borderBottomWidth: 1,
+                  borderRightWidth: 1,
+                  borderColor: "#dddddd",
+                },
+                index == materialNo.length - 1 && { borderBottomWidth: 0 },
+                index % 2 != 0 && { backgroundColor: "#E8FFE2" },
+                //  회색 #eeeeee
+              ]}
+            >
+              <Text
+                key={index}
                 style={{
-                  flexDirection: "row",
-                  height: "10%",
-                  backgroundColor: "#83DB89",
-                  borderTopRightRadius: 8,
+                  textAlign: "center",
+                  textAlignVertical: "center",
+                  fontSize: 16,
+                  fontWeight: 600,
                 }}
               >
-                {headerData.map((header, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      index == 2
-                        ? {
-                            width: 300,
-                            justifyContent: "center",
-                            borderBottomWidth: 1,
-                            borderColor: "#dddddd",
-                          }
-                        : styles.cell,
-                      { backgroundColor: "#83DB89", borderTopRightRadius: 8 },
-                    ]}
-                  >
-                    <Text
-                      key={index}
-                      style={{
-                        textAlign: "center",
-                        textAlignVertical: "center",
-                        fontSize: 18,
-                        fontWeight: 700,
-                        color: "white",
-                      }}
-                    >
-                      {header}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-
-              {/* 각 행의 시작 */}
-              <View style={{ flexDirection: "column", height: "90%" }}>
-                {data.map((row, index) => (
-                  <View
-                    key={index}
-                    style={{ flexDirection: "row", height: "10%" }}
-                  >
-                    {row.map((rowData, cellIndex) => (
-                      <View
-                        key={cellIndex}
-                        style={[
-                          cellIndex == 2
-                            ? {
-                                width: 300,
-                                justifyContent: "center",
-                                borderBottomWidth: 1,
-                                borderColor: "#dddddd",
-                              }
-                            : styles.cell,
-                          index == data.length - 1 && {
-                            borderBottomWidth: 0,
-                          },
-                          index % 2 != 0 && { backgroundColor: "#E8FFE2" },
-                          //  회색 #eeeeee
-                        ]}
-                      >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            textAlignVertical: "center",
-                            fontSize: 16,
-                          }}
-                        >
-                          {rowData}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
+                {material}
+              </Text>
             </View>
-          </ScrollView>
+          ))}
         </View>
+        <View style={{ flex: 8 }}>
+          <View>
+            <ScrollView horizontal={true}>
+              <View style={{ flexDirection: "column" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    height: "10%",
+                    backgroundColor: "#83DB89",
+                    borderTopRightRadius: 8,
+                  }}
+                >
+                  {headerData.map((header, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        index == 2
+                          ? {
+                              width: 300,
+                              justifyContent: "center",
+                              borderBottomWidth: 1,
+                              borderColor: "#dddddd",
+                            }
+                          : styles.cell,
+                        { backgroundColor: "#83DB89", borderTopRightRadius: 8 },
+                      ]}
+                    >
+                      <Text
+                        key={index}
+                        style={{
+                          textAlign: "center",
+                          textAlignVertical: "center",
+                          fontSize: 18,
+                          fontWeight: 700,
+                          color: "white",
+                        }}
+                      >
+                        {header}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+
+                {/* 각 행의 시작 */}
+                <View style={{ flexDirection: "column", height: "90%" }}>
+                  {data.map((row, index) => (
+                    <View
+                      key={index}
+                      style={{ flexDirection: "row", height: "10%" }}
+                    >
+                      {row.map((rowData, cellIndex) => (
+                        <View
+                          key={cellIndex}
+                          style={[
+                            cellIndex == 2
+                              ? {
+                                  width: 300,
+                                  justifyContent: "center",
+                                  borderBottomWidth: 1,
+                                  borderColor: "#dddddd",
+                                }
+                              : styles.cell,
+                            index == data.length - 1 && {
+                              borderBottomWidth: 0,
+                            },
+                            index % 2 != 0 && { backgroundColor: "#E8FFE2" },
+                            //  회색 #eeeeee
+                          ]}
+                        >
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              textAlignVertical: "center",
+                              fontSize: 16,
+                            }}
+                          >
+                            {rowData}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </View>
+      <View
+        style={{
+          height: "8%",
+          marginTop: "5%",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingHorizontal: "25%",
+        }}
+      >
+        <TouchableOpacity>
+          <MaterialCommunityIcons
+            name="chevron-left"
+            size={30}
+            color="#262627"
+          />
+        </TouchableOpacity>
+        {Array(5)
+          .fill(0)
+          .map((_, index) => (
+            <TouchableOpacity
+              key={index}
+              style={{
+                height: 30,
+                width: 30,
+                borderRadius: 6,
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={[
+                  { textAlign: "center", color: "#262627", fontSize: 16 },
+                  index === 2 && { color: "#83DB89", fontWeight: 800 },
+                ]}
+              >
+                {index + 1}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        <TouchableOpacity>
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={30}
+            color="black"
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

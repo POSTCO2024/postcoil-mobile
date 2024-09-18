@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     top: "10%",
     width: "80%",
     left: "10%",
-    height: "75%",
+    height: "80%",
     alignItems: "center",
   },
 });
