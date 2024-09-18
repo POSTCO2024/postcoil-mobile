@@ -60,29 +60,8 @@ export const Card = ({ error }) => {
       </View>
       <View style={styles.line}></View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextInput
-          style={{
-            height: "50%",
-            flex: 7,
-            borderColor: "grey",
-            borderWidth: 1,
-            padding: "1%",
-            marginTop: "3%",
-            marginBottom: "3%",
-            borderRadius: 5,
-          }}
-          multiline={true}
-        />
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            marginLeft: "2%",
-            borderRadius: 6,
-            backgroundColor: "#83DB89",
-            height: "50%",
-            paddingVertical: "1%",
-          }}
-        >
+        <TextInput style={styles.input} multiline={true} />
+        <TouchableOpacity style={styles.enrollBtn}>
           <Text
             style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
           >
@@ -90,6 +69,8 @@ export const Card = ({ error }) => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/*수정 등록버튼 card */}
       {/* <View
         style={{
           flexDirection: "row",
@@ -144,6 +125,10 @@ const styles = StyleSheet.create({
     width: "90%",
     paddingHorizontal: "5%",
     marginTop: "5%",
+    shadowColor: "#dddddd",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 6,
   },
   facilityError: {
     backgroundColor: "#A7C7E7",
@@ -199,5 +184,23 @@ const styles = StyleSheet.create({
     marginLeft: "3%",
     marginRight: "3%",
     marginTop: "1%",
+  },
+  input: {
+    height: "50%",
+    flex: 7,
+    borderColor: "grey",
+    borderWidth: 1,
+    padding: "1%",
+    marginTop: "3%",
+    marginBottom: "3%",
+    borderRadius: 5,
+  },
+  enrollBtn: {
+    flex: 1,
+    marginLeft: "2%",
+    borderRadius: 6,
+    backgroundColor: "#83DB89",
+    height: "50%",
+    paddingVertical: "1%",
   },
 });
