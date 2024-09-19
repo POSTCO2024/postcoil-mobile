@@ -2,11 +2,12 @@ import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import { datas } from "./Data";
+import ChartDetail from "./ChartDetail";
 const barData = datas.result.slice(0, 50);
 const barWidth = barData.map((coil) => ({
   id: coil.material.id,
   value: coil.material.width,
-  frontColor: "black",
+  frontColor: "#9acd32",
 }));
 const barThickness = barData.map((coil) => ({
   id: coil.material.id,
@@ -14,27 +15,31 @@ const barThickness = barData.map((coil) => ({
     coil.material.thickness > 0
       ? coil.material.thickness
       : -coil.material.thickness,
-  frontColor: "black",
+  frontColor: "#9acd32",
 }));
 export const Charts = () => {
   const [topChartData, setTopChartData] = useState(barWidth);
   const [bottomChartData, setBottomChartData] = useState(barThickness);
   const [clickedBar, setClickedBar] = useState();
+  const [materialDetail, setMaterialDetail] = useState();
 
   const handleBarPress = (item, index) => {
-    console.log(item);
+    setMaterialDetail(barData[index]);
     const updateTopData = [...topChartData];
-    updateTopData[index] = { ...topChartData[index], frontColor: "blue" };
+    updateTopData[index] = { ...topChartData[index], frontColor: "#2caffe" };
     const updateBottomData = [...bottomChartData];
-    updateBottomData[index] = { ...bottomChartData[index], frontColor: "blue" };
+    updateBottomData[index] = {
+      ...bottomChartData[index],
+      frontColor: "#2caffe",
+    };
     if (index != clickedBar) {
       updateTopData[clickedBar] = {
         ...updateTopData[clickedBar],
-        frontColor: "black",
+        frontColor: "#9acd32",
       };
       updateBottomData[clickedBar] = {
         ...updateBottomData[clickedBar],
-        frontColor: "black",
+        frontColor: "#9acd32",
       };
     }
     setClickedBar(index);
@@ -46,26 +51,17 @@ export const Charts = () => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "lightgrey",
         width: "100%",
         alignItems: "center",
       }}
     >
-      <View
-        style={{
-          width: "100%",
-          backgroundColor: "white",
-          flex: 12,
-          paddingHorizontal: "5%",
-          borderRadius: 7,
-        }}
-      >
+      <View style={styles.scrollContainer}>
         <ScrollView
           style={{ flex: 1, marginTop: "5%" }}
           horizontal={true}
           contentContainerStyle={{ flexDirection: "column" }}
         >
-          <View style={{ zIndex: 999, pointerEvents: "box-none" }}>
+          <View style={{ zIndex: 999 }}>
             <BarChart
               data={topChartData}
               barWidth={Dimensions.get("window").width * 0.07}
@@ -90,7 +86,6 @@ export const Charts = () => {
               marginTop: -10,
               transform: [{ rotateX: "180deg" }],
               zIndex: 1,
-              pointerEvents: "box-none",
             }}
           >
             <BarChart
@@ -116,8 +111,8 @@ export const Charts = () => {
           </View>
         </ScrollView>
       </View>
-      <View style={{ backgroundColor: "red", width: "90%", flex: 3 }}>
-        <Text>awddaw</Text>
+      <View style={styles.chartDetailContainer}>
+        <ChartDetail materialDetail={materialDetail} />
       </View>
     </View>
   );
@@ -126,11 +121,28 @@ export const Charts = () => {
 export default Charts;
 
 const styles = StyleSheet.create({
-  child: {
-    width: Dimensions.get("window").width * 0.2, // 각 자식 요소의 높이를 부모의 20%로 설정
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "lightblue",
-    marginBottom: 10, // 자식 요소 간 간격 추가
+  scrollContainer: {
+    width: "100%",
+    backgroundColor: "white",
+    flex: 12,
+    paddingHorizontal: "5%",
+    borderRadius: 7,
+    elevation: 5,
+    shadowColor: "#dddddd",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 6,
+  },
+  chartDetailContainer: {
+    backgroundColor: "#f9f9f9",
+    width: "100%",
+    flex: 4,
+    marginTop: "3%",
+    borderRadius: 6,
+    elevation: 5,
+    shadowColor: "#dddddd",
+    shadowOpacity: 1,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 6,
   },
 });

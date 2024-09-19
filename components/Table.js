@@ -182,7 +182,7 @@ export const TableChart = () => {
               style={[
                 styles.materialNo,
                 index == materialNo.length - 1 && { borderBottomWidth: 0 },
-                index % 2 != 0 && { backgroundColor: "#E8FFE2" },
+                index % 2 != 0 && { backgroundColor: "#eeeeee" },
                 //  회색 #eeeeee
               ]}
             >
@@ -219,7 +219,7 @@ export const TableChart = () => {
                         index == data.length - 1 && {
                           borderBottomWidth: 0,
                         },
-                        index % 2 != 0 && { backgroundColor: "#E8FFE2" },
+                        index % 2 != 0 && { backgroundColor: "#eeeeee" },
                       ]}
                     >
                       {row.map((rowData, cellIndex) => (

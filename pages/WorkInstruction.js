@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "100%",
     alignItems: "center",
-    backgroundColor: "yellow",
   },
   tablet: {
     position: "absolute",
@@ -33,6 +32,5 @@ const styles = StyleSheet.create({
     left: "10%",
     height: "87%",
     alignItems: "center",
-    backgroundColor: "yellow",
   },
 });
