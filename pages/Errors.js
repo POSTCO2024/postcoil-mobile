@@ -1,8 +1,29 @@
 import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
+import axios from "axios";
+import { url } from "../config/Url";
+
 export default function Errors() {
+  const [error, setError] = useState(null);
+
   const deviceWidth = Dimensions.get("window").width;
+
+  async function getErrors(facility) {
+    try {
+      const response = await axios.get(
+        url + "/api/v1/target-materials/error-by-curr-proc?currProc=" + facility
+      );
+      setError(response.data.result);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  useEffect(() => {
+    getErrors("1CAL");
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 2, backgroundColor: "#E8FFE2" }}></View>
@@ -14,12 +35,13 @@ export default function Errors() {
             alignItems: "center",
           }}
         >
-          <Card error={"설비에러재"} />
-          <Card error={"관리재"} />
-          <Card error={"정보이상재"} />
-          <Card error={"설비에러재"} />
-          <Card error={"관리재"} />
-          <Card error={"정보이상재"} />
+          {error ? (
+            error.map((item, index) => (
+              <Card key={index} error={item} /> // 오류가 없을 때만 Card를 렌더링합니다.
+            ))
+          ) : (
+            <></>
+          )}
         </ScrollView>
       </View>
     </View>

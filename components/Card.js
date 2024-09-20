@@ -8,7 +8,7 @@ import {
 import React from "react";
 const color = (errorType) => {
   switch (errorType) {
-    case "설비에러재":
+    case "설비이상에러재":
       return styles.facilityError;
     case "관리재":
       return styles.managementError;
@@ -18,13 +18,13 @@ const color = (errorType) => {
 };
 
 export const Card = ({ error }) => {
-  const errorColor = color(error);
+  const errorColor = color(error.errorType);
   return (
     <View style={styles.card}>
       <View style={styles.materialView}>
         <View>
           <Text style={[styles.materialNo, { fontWeight: 800 }]}>
-            재료번호 : CZ299150
+            재료번호 : {error.material.no}
           </Text>
         </View>
         <View style={errorColor}>
@@ -34,28 +34,36 @@ export const Card = ({ error }) => {
               fontWeight: 600,
             }}
           >
-            {error}
+            {error.errorType}
           </Text>
         </View>
       </View>
       <View style={styles.line}></View>
       <View style={{ marginTop: "2%", flexDirection: "row" }}>
         <View style={{ flexDirection: "column", flex: 1 }}>
-          <Text style={[styles.info, { fontWeight: 800 }]}>공정 : 1PCM</Text>
-          <Text style={styles.infoColor}>주문번호</Text>
-          <Text style={styles.info}>고객사 : D사</Text>
-          <Text style={styles.infoColor}>생산 기한일 : 2024-11-18</Text>
-          <Text style={styles.info}>코일 타입 : </Text>
-          <Text style={styles.infoColor}>저장위치 : </Text>
+          <Text style={[styles.info, { fontWeight: 800 }]}>
+            공정 : {error.material.currProc}
+          </Text>
+          <Text style={styles.infoColor}>{error.order.no}</Text>
+          <Text style={styles.info}>{error.order.customer}</Text>
+          <Text style={styles.infoColor}>
+            생산 기한일 : {error.order.dueDate.split(" ")[0]}
+          </Text>
+          <Text style={styles.info}>
+            코일 타입 : {error.material.coilTypeCode}
+          </Text>
+          <Text style={styles.infoColor}>
+            저장위치 : {error.material.storageLoc}
+          </Text>
         </View>
         <View style={styles.verticalLine}></View>
         <View style={{ flexDirection: "column", flex: 1 }}>
-          <Text style={styles.info}>현공정: </Text>
-          <Text style={styles.infoColor}>전공정:</Text>
-          <Text style={styles.info}>잔공정: </Text>
-          <Text style={styles.infoColor}>두께: </Text>
-          <Text style={styles.info}>폭: </Text>
-          <Text style={styles.infoColor}>단중: </Text>
+          <Text style={styles.info}>계획공정: {error.processPlan}</Text>
+          <Text style={styles.infoColor}>전공정: {error.material.preProc}</Text>
+          <Text style={styles.info}>잔공정: {error.material.remProc}</Text>
+          <Text style={styles.infoColor}>두께: {error.material.thickness}</Text>
+          <Text style={styles.info}>폭: {error.material.width}</Text>
+          <Text style={styles.infoColor}>단중: {error.material.weight}</Text>
         </View>
       </View>
       <View style={styles.line}></View>
