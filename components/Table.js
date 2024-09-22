@@ -5,8 +5,10 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import axios from "axios";
+import { url } from "../config/Url";
 
 const headerData = [
   "현공정",
@@ -22,238 +24,178 @@ const headerData = [
   "저장위치",
 ];
 
-const materialNo = [
-  "CZ299150",
-  "CE855821",
-  "CX390337",
-  "CZ407389",
-  "CR504850",
-  "CG699600",
-  "CG699600",
-  "CG699600",
-  "CG699600",
-  "CG699600",
-];
-
-const data = [
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-];
-
 export const TableChart = () => {
+  const [normals, setNormals] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageRange, setPageRange] = useState([]);
+  const postSize = 10;
+
+  useEffect(() => {
+    getNormals("1CAL");
+  }, []);
+  const indexOfLastPost = currentPage * postSize;
+  const indexOfFirstPost = indexOfLastPost - postSize;
+
+  const currentPosts = normals
+    ? normals.slice(indexOfFirstPost, indexOfLastPost)
+    : null;
+  const totalPages = normals ? Math.ceil(normals.length / postSize) : "";
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleNext = () => {
+    if (pageRange[pageRange.length - 1] < totalPages) {
+      const newRange = pageRange.map((num) => num + 1);
+      setPageRange(newRange);
+      setCurrentPage(currentPage + 1);
+    } else if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // 이전 페이지 범위로 이동
+  const handlePrev = () => {
+    if (pageRange[0] > 1) {
+      const newRange = pageRange.map((num) => num - 1);
+      setPageRange(newRange);
+      setCurrentPage(currentPage - 1);
+    } else if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const rows = currentPosts
+    ? currentPosts.map((item) => {
+        return [
+          item.material.currProc,
+          item.material.nextProc,
+          item.processPlan,
+          item.material.factoryCode,
+          item.order.thickness,
+          item.material.thickness,
+          item.order.width,
+          item.material.weight,
+          item.material.weight,
+          item.rollUnitName,
+          item.material.storageLoc,
+        ];
+      })
+    : "";
+  console.log(rows);
+
+  async function getNormals(facility) {
+    try {
+      const response = await axios.get(
+        url +
+          "/api/v1/target-materials/normal-by-curr-proc?currProc=" +
+          facility
+      );
+      setNormals(response.data.result);
+      updatePageRange(response.data.result.length);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+  const updatePageRange = (length) => {
+    const totalPages = Math.ceil(length / 10);
+    const newRange =
+      totalPages > 5
+        ? Array.from({ length: 5 }, (_, i) => i + 1)
+        : Array.from({ length: totalPages }, (_, i) => i + 1);
+    setPageRange(newRange);
+  };
+
   return (
     <View style={{ flex: 1, width: "100%" }}>
-      <View style={styles.tableFrame}>
-        <View style={{ flex: 3 }}>
-          <View style={styles.materialColumn}>
-            <Text style={styles.materialColumnText}> 재료 번호</Text>
-          </View>
-          {materialNo.map((material, index) => (
-            <View
-              key={index}
-              style={[
-                styles.materialNo,
-                index == materialNo.length - 1 && { borderBottomWidth: 0 },
-                index % 2 != 0 && { backgroundColor: "#eeeeee" },
-                //  회색 #eeeeee
-              ]}
-            >
-              <Text key={index} style={styles.materialNoText}>
-                {material}
-              </Text>
+      {normals ? (
+        <View style={styles.tableFrame}>
+          <View style={{ flex: 3 }}>
+            <View style={styles.materialColumn}>
+              <Text style={styles.materialColumnText}> 재료 번호</Text>
             </View>
-          ))}
-        </View>
-        <View style={{ flex: 8 }}>
-          <View>
-            <ScrollView horizontal={true}>
-              <View style={{ flexDirection: "column" }}>
-                <View style={styles.headerView}>
-                  {headerData.map((header, index) => (
-                    <View
-                      key={index}
-                      style={index == 2 ? styles.header : styles.cell}
-                    >
-                      <Text key={index} style={styles.headerText}>
-                        {header}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-
-                {/* 각 행의 시작 */}
-                <View style={{ flexDirection: "column", height: "90%" }}>
-                  {data.map((row, index) => (
-                    <View
-                      key={index}
-                      style={[
-                        styles.rowView,
-                        index == data.length - 1 && {
-                          borderBottomWidth: 0,
-                        },
-                        index % 2 != 0 && { backgroundColor: "#eeeeee" },
-                      ]}
-                    >
-                      {row.map((rowData, cellIndex) => (
-                        <View
-                          key={cellIndex}
-                          style={[
-                            cellIndex == 2
-                              ? {
-                                  width: 300,
-                                  justifyContent: "center",
-                                }
-                              : styles.cell,
-                          ]}
-                        >
-                          <Text style={styles.cellText}>{rowData}</Text>
-                        </View>
-                      ))}
-                    </View>
-                  ))}
-                </View>
+            {currentPosts.map((material, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.materialNo,
+                  index == currentPosts.length - 1 && { borderBottomWidth: 0 },
+                  index % 2 != 0 && { backgroundColor: "#eeeeee" },
+                  //  회색 #eeeeee
+                ]}
+              >
+                <Text key={index} style={styles.materialNoText}>
+                  {material.material.no}
+                </Text>
               </View>
-            </ScrollView>
+            ))}
+          </View>
+
+          <View style={{ flex: 8 }}>
+            <View>
+              <ScrollView horizontal={true}>
+                <View style={{ flexDirection: "column" }}>
+                  <View style={styles.headerView}>
+                    {headerData.map((header, index) => (
+                      <View
+                        key={index}
+                        style={index == 2 ? styles.header : styles.cell}
+                      >
+                        <Text key={index} style={styles.headerText}>
+                          {header}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+
+                  {/* 각 행의 시작 */}
+                  <View style={{ flexDirection: "column", height: "90%" }}>
+                    {rows.map((row, index) => (
+                      <View
+                        key={index}
+                        style={[
+                          styles.rowView,
+                          index == rows.length - 1 && {
+                            borderBottomWidth: 0,
+                          },
+                          index % 2 != 0 && { backgroundColor: "#eeeeee" },
+                        ]}
+                      >
+                        {row.map((rowData, cellIndex) => (
+                          <View
+                            key={cellIndex}
+                            style={[
+                              cellIndex == 2
+                                ? {
+                                    width: 300,
+                                    justifyContent: "center",
+                                  }
+                                : styles.cell,
+                            ]}
+                          >
+                            <Text style={styles.cellText}>{rowData}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </ScrollView>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.pagingView}>
-        <TouchableOpacity>
-          <MaterialCommunityIcons
-            name="chevron-left"
-            size={30}
-            color="#262627"
-          />
-        </TouchableOpacity>
-        {Array(5)
+      ) : (
+        <></>
+      )}
+      {normals ? (
+        <View style={styles.pagingView}>
+          <TouchableOpacity onPress={handlePrev} disabled={currentPage === 1}>
+            <MaterialCommunityIcons
+              name="chevron-left"
+              size={30}
+              color={currentPage === 1 ? "lightgrey" : "#262627"}
+            />
+          </TouchableOpacity>
+          {/* {Array(5)
           .fill(0)
           .map((_, index) => (
             <TouchableOpacity key={index} style={styles.pagingBtn}>
@@ -266,15 +208,40 @@ export const TableChart = () => {
                 {index + 1}
               </Text>
             </TouchableOpacity>
+          ))} */}
+          {pageRange.map((number) => (
+            <TouchableOpacity
+              key={number}
+              onPress={() => paginate(number)}
+              style={[styles.pageButton]}
+            >
+              <Text
+                style={[
+                  styles.pageText,
+                  currentPage === number && {
+                    color: "#83DB89",
+                    fontWeight: 800,
+                  },
+                ]}
+              >
+                {number}
+              </Text>
+            </TouchableOpacity>
           ))}
-        <TouchableOpacity>
-          <MaterialCommunityIcons
-            name="chevron-right"
-            size={30}
-            color="black"
-          />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={handleNext}
+            disabled={currentPage === totalPages}
+          >
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={30}
+              color={currentPage === totalPages ? "lightgrey" : "#262627"}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

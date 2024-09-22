@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../config/Url";
 export const Card = ({ error, getErrors }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(error.order.remarks);
 
   async function postComments(id, comment) {
     console.log(id + "     " + comment);
