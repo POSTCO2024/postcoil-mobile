@@ -5,20 +5,40 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
-const color = (errorType) => {
-  switch (errorType) {
-    case "설비이상에러재":
-      return styles.facilityError;
-    case "관리재":
-      return styles.managementError;
-    case "정보이상재":
-      return styles.infoError;
-  }
-};
+import React, { useState } from "react";
+import axios from "axios";
+import { url } from "../config/Url";
+export const Card = ({ error, getErrors }) => {
+  const [text, setText] = useState("");
 
-export const Card = ({ error }) => {
+  async function postComments(id, comment) {
+    console.log(id + "     " + comment);
+    try {
+      const response = await axios.post(
+        url + "/api/v1/target-materials/comment/" + id,
+        {
+          comment: comment,
+        }
+      );
+      getErrors("1CAL");
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
+
+  const color = (errorType) => {
+    switch (errorType) {
+      case "설비이상에러재":
+        return styles.facilityError;
+      case "관리재":
+        return styles.managementError;
+      case "정보이상재":
+        return styles.infoError;
+    }
+  };
+
   const errorColor = color(error.errorType);
+  console.log(text);
   return (
     <View style={styles.card}>
       <View style={styles.materialView}>
@@ -68,8 +88,16 @@ export const Card = ({ error }) => {
       </View>
       <View style={styles.line}></View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextInput style={styles.input} multiline={true} />
-        <TouchableOpacity style={styles.enrollBtn}>
+        <TextInput
+          style={styles.input}
+          multiline={true}
+          onChangeText={(a) => setText(a)}
+          value={text}
+        />
+        <TouchableOpacity
+          style={styles.enrollBtn}
+          onPress={() => postComments(error.material.id, text)}
+        >
           <Text
             style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
           >

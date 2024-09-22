@@ -37,7 +37,7 @@ export default function Errors() {
         >
           {error ? (
             error.map((item, index) => (
-              <Card key={index} error={item} /> // 오류가 없을 때만 Card를 렌더링합니다.
+              <Card key={index} error={item} getErrors={getErrors} /> // 오류가 없을 때만 Card를 렌더링합니다.
             ))
           ) : (
             <></>
