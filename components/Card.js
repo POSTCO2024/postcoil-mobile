@@ -63,7 +63,12 @@ export const Card = ({ error }) => {
         <TextInput style={styles.input} multiline={true} />
         <TouchableOpacity style={styles.enrollBtn}>
           <Text
-            style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
+            style={{
+              textAlign: "center",
+              color: "#ffffff",
+              fontWeight: 800,
+              lineHeight: 20,
+            }}
           >
             등록
           </Text>

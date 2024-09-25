@@ -2,22 +2,23 @@ import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import { datas } from "./Data";
-import ChartDetail from "./ChartDetail";
-const barData = datas.result.slice(0, 50);
-const barWidth = barData.map((coil) => ({
-  id: coil.material.id,
-  value: coil.material.width,
-  frontColor: "#9acd32",
-}));
-const barThickness = barData.map((coil) => ({
-  id: coil.material.id,
-  value:
-    coil.material.thickness > 0
-      ? coil.material.thickness
-      : -coil.material.thickness,
-  frontColor: "#9acd32",
-}));
-export const Charts = () => {
+import ChartDetailMobile from "./ChartDetailMobile";
+
+export const ChartsMobile = () => {
+  const barData = datas.result.slice(0, 50);
+  const barWidth = barData.map((coil) => ({
+    id: coil.material.id,
+    value: coil.material.width,
+    frontColor: "#9acd32",
+  }));
+  const barThickness = barData.map((coil) => ({
+    id: coil.material.id,
+    value:
+      coil.material.thickness > 0
+        ? coil.material.thickness
+        : -coil.material.thickness,
+    frontColor: "#9acd32",
+  }));
   const [topChartData, setTopChartData] = useState(barWidth);
   const [bottomChartData, setBottomChartData] = useState(barThickness);
   const [clickedBar, setClickedBar] = useState();
@@ -51,8 +52,9 @@ export const Charts = () => {
     <View
       style={{
         flex: 1,
-        width: "100%",
+        width: "90%",
         alignItems: "center",
+        marginTop: "3%",
       }}
     >
       <View style={styles.scrollContainer}>
@@ -64,8 +66,8 @@ export const Charts = () => {
           <View style={{ zIndex: 999 }}>
             <BarChart
               data={topChartData}
-              barWidth={Dimensions.get("window").width * 0.07}
-              height={Dimensions.get("window").height * 0.25}
+              barWidth={Dimensions.get("window").width * 0.09}
+              height={Dimensions.get("window").height * 0.23}
               barBorderTopLeftRadius={4}
               barBorderTopRightRadius={4}
               barBorderWidth={1}
@@ -90,8 +92,8 @@ export const Charts = () => {
           >
             <BarChart
               data={bottomChartData}
-              barWidth={Dimensions.get("window").width * 0.07}
-              height={Dimensions.get("window").height * 0.25}
+              barWidth={Dimensions.get("window").width * 0.09}
+              height={Dimensions.get("window").height * 0.23}
               barBorderTopLeftRadius={4}
               barBorderTopRightRadius={4}
               barBorderWidth={1}
@@ -112,13 +114,13 @@ export const Charts = () => {
         </ScrollView>
       </View>
       <View style={styles.chartDetailContainer}>
-        <ChartDetail materialDetail={materialDetail} />
+        <ChartDetailMobile materialDetail={materialDetail} />
       </View>
     </View>
   );
 };
 
-export default Charts;
+export default ChartsMobile;
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -134,9 +136,9 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   chartDetailContainer: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#F5F5F5",
     width: "100%",
-    flex: 4,
+    flex: 5,
     marginTop: "3%",
     borderRadius: 6,
     elevation: 5,
