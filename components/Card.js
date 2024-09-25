@@ -52,6 +52,7 @@ export const Card = ({ error, getErrors }) => {
             style={{
               fontSize: 16,
               fontWeight: 600,
+              lineHeight: 24,
             }}
           >
             {error.errorType}
