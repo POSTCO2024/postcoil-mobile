@@ -99,7 +99,12 @@ export const Card = ({ error, getErrors }) => {
           onPress={() => postComments(error.material.id, text)}
         >
           <Text
-            style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
+            style={{
+              textAlign: "center",
+              color: "#ffffff",
+              fontWeight: 800,
+              lineHeight: 20,
+            }}
           >
             등록
           </Text>
