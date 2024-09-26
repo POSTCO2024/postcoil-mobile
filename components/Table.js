@@ -4,12 +4,13 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import { url } from "../config/Url";
-
+import { datas } from "./Data";
 const headerData = [
   "현공정",
   "후공정",
@@ -23,153 +24,7 @@ const headerData = [
   "롤유닛",
   "저장위치",
 ];
-
-const materialNo = [
-  "CZ299150",
-  "CE855821",
-  "CX390337",
-  // "CZ407389",
-  // "CR504850",
-  // "CG699600",
-  // "CG699600",
-  // "CG699600",
-  // "CG699600",
-  // "CG699600",
-];
-
-const data = [
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  [
-    "1CAL",
-    "1EGL",
-    "1PCM2CAL1EGL101",
-    "f_code",
-    "1.8",
-    "2.2",
-    "871.0",
-    "900",
-    "0.003534",
-    "AA",
-    "awdawddwaa",
-  ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-  // [
-  //   "1CAL",
-  //   "1EGL",
-  //   "1PCM2CAL1EGL101",
-  //   "f_code",
-  //   "1.8",
-  //   "2.2",
-  //   "871.0",
-  //   "900",
-  //   "0.003534",
-  //   "AA",
-  //   "awdawddwaa",
-  // ],
-];
-
+const deviceWidth = Dimensions.get("window").width;
 export const TableChart = () => {
   const [normals, setNormals] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -177,7 +32,9 @@ export const TableChart = () => {
   const postSize = 10;
 
   useEffect(() => {
-    getNormals("1CAL");
+    const filteredData = datas.result.filter((item) => item.isError === "N");
+    setNormals(filteredData);
+    updatePageRange(filteredData.length);
   }, []);
   const indexOfLastPost = currentPage * postSize;
   const indexOfFirstPost = indexOfLastPost - postSize;
@@ -252,10 +109,16 @@ export const TableChart = () => {
   };
 
   return (
-    <View style={{ flex: 1, width: "100%" }}>
+    <View
+      style={{
+        flex: 1,
+        width: deviceWidth > 500 ? "80%" : "90%",
+        marginTop: "6%",
+      }}
+    >
       {normals ? (
         <View style={styles.tableFrame}>
-          <View style={{ flex: 3 }}>
+          <View style={{ flex: deviceWidth > 500 ? 3 : 4 }}>
             <View style={styles.materialColumn}>
               <Text style={styles.materialColumnText}> 재료 번호</Text>
             </View>
@@ -360,6 +223,7 @@ export const TableChart = () => {
               key={number}
               onPress={() => paginate(number)}
               style={[styles.pageButton]}
+              hitSlop={{ top: 10, bottom: 10, left: 15, right: 15 }}
             >
               <Text
                 style={[
@@ -479,13 +343,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    paddingHorizontal: "25%",
+    paddingHorizontal: deviceWidth > 500 ? "20%" : "0",
   },
   pagingBtn: {
     height: 30,
     width: 30,
     borderRadius: 6,
     justifyContent: "center",
+    borderColor: "black",
+    borderWidth: 2,
   },
   pagingText: {
     textAlign: "center",
