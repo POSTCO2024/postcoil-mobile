@@ -25,17 +25,20 @@ const headerData = [
   "저장위치",
 ];
 const deviceWidth = Dimensions.get("window").width;
-export const TableChart = () => {
+export const TableChart = ({ facility }) => {
   const [normals, setNormals] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageRange, setPageRange] = useState([]);
   const postSize = 10;
 
   useEffect(() => {
-    const filteredData = datas.result.filter((item) => item.isError === "N");
+    const filteredData = datas.result.filter(
+      (item) => item.isError === "N" && item.material.currProc === facility
+    );
+    setCurrentPage(1);
     setNormals(filteredData);
     updatePageRange(filteredData.length);
-  }, []);
+  }, [facility]);
   const indexOfLastPost = currentPage * postSize;
   const indexOfFirstPost = indexOfLastPost - postSize;
 

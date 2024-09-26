@@ -35,7 +35,7 @@ export const Targets = () => {
                 setOpen={setOpen}
                 setValue={setValue}
                 onSelectItem={(item) => {
-                  console.log(item);
+                  setValue(item.value);
                 }}
                 style={{ borderWidth: 1, borderColor: "#EBEBEB" }}
                 dropDownContainerStyle={{
@@ -46,7 +46,7 @@ export const Targets = () => {
             </View>
           </View>
         </View>
-        <TableChart />
+        <TableChart facility={value} />
       </View>
     </View>
   );
