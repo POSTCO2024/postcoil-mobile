@@ -14,6 +14,10 @@ export default function Errors() {
   const items = [
     { label: "1CAL", value: "1CAL" },
     { label: "2CAL", value: "2CAL" },
+    { label: "1EGL", value: "1EGL" },
+    { label: "2EGL", value: "2EGL" },
+    { label: "1CGL", value: "1CGL" },
+    { label: "2CGL", value: "2CGL" },
   ];
 
   const firstError = datas.result.filter(
