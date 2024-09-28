@@ -61,9 +61,9 @@ export const ChartDetailMobile = ({ materialDetail }) => {
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <TouchableOpacity style={styles.touchableOpacity}>
+          {/* <TouchableOpacity style={styles.touchableOpacity}>
             <Text style={{ color: "white", fontWeight: 600 }}>REJECT</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       <View style={{ flexDirection: "column", flex: 1, marginLeft: "3%" }}>
@@ -86,9 +86,11 @@ export const ChartDetailMobile = ({ materialDetail }) => {
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <TouchableOpacity style={styles.touchableOpacity}>
+          <TouchableOpacity
+            style={[styles.touchableOpacity, { backgroundColor: "#F5004F" }]}
+          >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
-              긴급정지
+              REJECT
             </Text>
           </TouchableOpacity>
         </View>
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
   touchableOpacity: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2caffe",
+    backgroundColor: "#1677FF",
     height: "70%",
     borderRadius: 6,
   },
