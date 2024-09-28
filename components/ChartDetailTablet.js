@@ -3,7 +3,6 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 
 export const ChartDetailTablet = ({ materialDetail }) => {
-  console.log(materialDetail);
   return (
     <View
       style={{

@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChartsTablet from "../components/ChartsTablet";
 import ChartsMobile from "../components/ChartsMobile";
 import DropDownPicker from "react-native-dropdown-picker";
+import axios from "axios";
+import { operationUrl } from "../config/Url";
 
 const deviceWidth = Dimensions.get("window").width;
 export const WorkInstruction = () => {
@@ -12,10 +14,46 @@ export const WorkInstruction = () => {
     { label: "1CAL", value: "1CAL" },
     { label: "2CAL", value: "2CAL" },
   ];
+  const [scheduleList, setScheduleList] = useState(null);
   const [schedule, setSchedule] = useState([]);
   const [scheduleOpen, setScheduleOpen] = useState(false);
-  const [scheduleValue, setScheduleValue] = useState(null);
-  console.log(value + "   " + schedule);
+  const [scheduleValue, setScheduleValue] = useState();
+  const [selectedScheduleData, setSelectedScheduleData] = useState(null);
+  const getInstrucions = async (process) => {
+    try {
+      const response = await axios.get(
+        operationUrl +
+          "/api/v2/work-instructions/uncompleted?process=" +
+          process
+      );
+      const instructions = response.data.result;
+      console.log(instructions);
+      setScheduleList(instructions);
+      setSchedule(
+        instructions.map((item) => ({
+          label: item.scheduleNo,
+          value: item.scheduleNo,
+        }))
+      );
+      setScheduleValue(instructions[0].scheduleNo);
+      setSelectedScheduleData(instructions[0]);
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
+  useEffect(() => {
+    getInstrucions("1CAL");
+  }, []);
+
+  // 선택된 스케줄 찾기
+  const selectedSchedule = (name) => {
+    const finded = scheduleList.find(
+      (schedule) => schedule.scheduleNo === name
+    );
+    setSelectedScheduleData(finded);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 2, backgroundColor: "#E8FFE2" }}></View>
@@ -40,7 +78,8 @@ export const WorkInstruction = () => {
                 setOpen={setOpen}
                 setValue={setValue}
                 onSelectItem={(item) => {
-                  console.log(item);
+                  console.log("onSelectItem");
+                  getInstrucions(item.value);
                 }}
                 style={{ borderWidth: 1, borderColor: "#EBEBEB" }}
                 dropDownContainerStyle={{
@@ -67,9 +106,9 @@ export const WorkInstruction = () => {
                 items={schedule}
                 setOpen={setScheduleOpen}
                 setValue={setScheduleValue}
-                setSchedule={setSchedule}
+                // setSchedule={setSchedule}
                 onSelectItem={(item) => {
-                  console.log(item);
+                  selectedSchedule(item.value);
                 }}
                 style={{
                   borderWidth: 1,
@@ -85,7 +124,15 @@ export const WorkInstruction = () => {
             </View>
           </View>
         </View>
-        {deviceWidth > 500 ? <ChartsTablet /> : <ChartsMobile />}
+        {selectedScheduleData ? (
+          deviceWidth > 500 ? (
+            <ChartsTablet />
+          ) : (
+            <ChartsMobile />
+          )
+        ) : (
+          <></>
+        )}
       </View>
     </View>
   );

@@ -20,9 +20,9 @@ export default function Errors() {
     }
   }
 
-  useEffect(() => {
-    getErrors("1CAL");
-  }, []);
+  // useEffect(() => {
+  //   getErrors("1CAL");
+  // }, []);
 
   return (
     <View style={{ flex: 1 }}>
