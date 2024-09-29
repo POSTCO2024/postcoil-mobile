@@ -1,22 +1,24 @@
 import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import { datas } from "./Data";
 import ChartDetailTablet from "./ChartDetailTablet";
 
-export const ChartsTablet = () => {
-  const barData = datas.result.slice(0, 50);
-  const barWidth = barData.map((coil) => ({
-    id: coil.material.id,
-    value: coil.material.width,
+export const ChartsTablet = ({ data }) => {
+  console.log(data);
+  const barData = data;
+  const barDataItems = data.items.sort((a, b) => a.sequence - b.sequence);
+  const barWidth = barDataItems.map((coil) => ({
+    id: coil.materialId,
+    value: coil.initialGoalWidth,
     frontColor: "#9acd32",
   }));
-  const barThickness = barData.map((coil) => ({
-    id: coil.material.id,
+  const barThickness = barDataItems.map((coil) => ({
+    id: coil.materialId,
     value:
-      coil.material.thickness > 0
-        ? coil.material.thickness
-        : -coil.material.thickness,
+      coil.initialThickness > 0
+        ? coil.initialThickness
+        : -coil.initialThickness,
     frontColor: "#9acd32",
   }));
   const [topChartData, setTopChartData] = useState(barWidth);
@@ -25,7 +27,7 @@ export const ChartsTablet = () => {
   const [materialDetail, setMaterialDetail] = useState();
 
   const handleBarPress = (item, index) => {
-    setMaterialDetail(barData[index]);
+    setMaterialDetail(barDataItems[index]);
     const updateTopData = [...topChartData];
     updateTopData[index] = { ...topChartData[index], frontColor: "#2caffe" };
     const updateBottomData = [...bottomChartData];
@@ -47,6 +49,14 @@ export const ChartsTablet = () => {
     setTopChartData(updateTopData);
     setBottomChartData(updateBottomData);
   };
+
+  // 스케줄 데이터가 바뀔 때마다 차트 데이터를 업데이트하는 useEffect
+  useEffect(() => {
+    setTopChartData(barWidth);
+    setBottomChartData(barThickness);
+    setClickedBar(null); // 새 스케줄로 바뀔 때 클릭된 막대 초기화
+    setMaterialDetail(null); // 새 스케줄로 바뀔 때 상세 정보 초기화
+  }, [data]);
 
   return (
     <View

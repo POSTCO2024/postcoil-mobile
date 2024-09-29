@@ -126,9 +126,9 @@ export const WorkInstruction = () => {
         </View>
         {selectedScheduleData ? (
           deviceWidth > 500 ? (
-            <ChartsTablet />
+            <ChartsTablet data={selectedScheduleData} />
           ) : (
-            <ChartsMobile />
+            <ChartsMobile data={selectedScheduleData} />
           )
         ) : (
           <></>

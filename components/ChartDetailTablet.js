@@ -3,6 +3,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 
 export const ChartDetailTablet = ({ materialDetail }) => {
+  console.log(materialDetail);
   return (
     <View
       style={{
@@ -15,7 +16,7 @@ export const ChartDetailTablet = ({ materialDetail }) => {
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>코일번호 : </Text>
-            {materialDetail ? materialDetail.material.no : " "}
+            {materialDetail ? materialDetail.materialNo : " "}
           </Text>
         </View>
         <View style={styles.rowStyle}>
@@ -23,13 +24,13 @@ export const ChartDetailTablet = ({ materialDetail }) => {
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>
               생산기한일 :{" "}
             </Text>
-            {materialDetail ? materialDetail.order.dueDate.split(" ")[0] : " "}
+            {/* {materialDetail ? materialDetail.order.dueDate.split(" ")[0] : " "} */}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>롤유닛 : </Text>
-            {materialDetail ? materialDetail.rollUnitName : ""}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>예상시간 : </Text>
+            {materialDetail ? materialDetail.expectedItemDuration : ""} 분
           </Text>
         </View>
       </View>
@@ -37,39 +38,39 @@ export const ChartDetailTablet = ({ materialDetail }) => {
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>현공정 : </Text>
-            {materialDetail ? materialDetail.material.currProc : ""}
+            {/* {materialDetail ? materialDetail.material.currProc : ""} */}
           </Text>
         </View>
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>후공정 : </Text>
-            {materialDetail ? materialDetail.material.nextProc : ""}
+            {/* {materialDetail ? materialDetail.material.nextProc : ""} */}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>온도 : </Text>
-            {materialDetail ? materialDetail.material.temperature : ""}
+            {/* {materialDetail ? materialDetail.material.temperature : ""} */}
           </Text>
         </View>
       </View>
       <View style={{ flexDirection: "column", flex: 1, marginLeft: "3%" }}>
         <View style={styles.rowStyle}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>폭 : </Text>
-            {materialDetail ? materialDetail.material.width : ""}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>목표폭 : </Text>
+            {materialDetail ? materialDetail.initialGoalWidth : ""}
           </Text>
         </View>
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>두께 : </Text>
-            {materialDetail ? materialDetail.material.thickness : ""}
+            {materialDetail ? materialDetail.initialThickness : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>단중 : </Text>
-            {materialDetail ? materialDetail.material.weight : ""}
+            {/* {materialDetail ? materialDetail.material.weight : ""} */}
           </Text>
         </View>
       </View>
