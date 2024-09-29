@@ -19,6 +19,21 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
       console.log(errors);
     }
   };
+
+  const rejectCoil = async () => {
+    try {
+      const response = await axios.post(
+        operationUrl +
+          "/api/coil-work/reject/" +
+          workInstructionId +
+          "/" +
+          materialDetail.id
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
   return (
     <View
       style={{
@@ -91,7 +106,7 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
         <TouchableOpacity style={styles.touchableOpacity} onPress={requestCoil}>
           <Text style={{ color: "white", fontWeight: 600 }}>보급요구</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.touchableOpacity}>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={rejectCoil}>
           <Text style={{ color: "white", fontWeight: 600 }}>REJECT</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.touchableOpacity}>
