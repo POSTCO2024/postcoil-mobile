@@ -124,7 +124,10 @@ export const ChartsTablet = ({ data }) => {
         </ScrollView>
       </View>
       <View style={styles.chartDetailContainer}>
-        <ChartDetailTablet materialDetail={materialDetail} />
+        <ChartDetailTablet
+          materialDetail={materialDetail}
+          workInstructionId={barData.id}
+        />
       </View>
     </View>
   );

@@ -1,9 +1,24 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
+import axios from "axios";
+import { operationUrl } from "../config/Url";
 
-export const ChartDetailTablet = ({ materialDetail }) => {
+export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
   console.log(materialDetail);
+  console.log("workInstructionId    " + workInstructionId);
+  const requestCoil = async () => {
+    try {
+      const response = await axios.post(
+        operationUrl +
+          "/api/coil-work/request-supply/" +
+          workInstructionId +
+          "?supplyCount=1"
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
   return (
     <View
       style={{
@@ -21,10 +36,8 @@ export const ChartDetailTablet = ({ materialDetail }) => {
         </View>
         <View style={styles.rowStyle}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>
-              생산기한일 :{" "}
-            </Text>
-            {/* {materialDetail ? materialDetail.order.dueDate.split(" ")[0] : " "} */}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>단중 : </Text>
+            {materialDetail ? materialDetail.weight : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
@@ -37,20 +50,20 @@ export const ChartDetailTablet = ({ materialDetail }) => {
       <View style={{ flexDirection: "column", flex: 1, marginLeft: "6%" }}>
         <View style={styles.rowStyle}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>현공정 : </Text>
-            {/* {materialDetail ? materialDetail.material.currProc : ""} */}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>전공정 : </Text>
+            {materialDetail ? materialDetail.preProc : ""}
           </Text>
         </View>
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>후공정 : </Text>
-            {/* {materialDetail ? materialDetail.material.nextProc : ""} */}
+            {materialDetail ? materialDetail.nextProc : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>온도 : </Text>
-            {/* {materialDetail ? materialDetail.material.temperature : ""} */}
+            {materialDetail ? materialDetail.temperature : ""}
           </Text>
         </View>
       </View>
@@ -69,13 +82,13 @@ export const ChartDetailTablet = ({ materialDetail }) => {
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>단중 : </Text>
-            {/* {materialDetail ? materialDetail.material.weight : ""} */}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>길이 : </Text>
+            {materialDetail ? materialDetail.length : ""}
           </Text>
         </View>
       </View>
       <View style={{ flex: 0.7, justifyContent: "space-around" }}>
-        <TouchableOpacity style={styles.touchableOpacity}>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={requestCoil}>
           <Text style={{ color: "white", fontWeight: 600 }}>보급요구</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.touchableOpacity}>
