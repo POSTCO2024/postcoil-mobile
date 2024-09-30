@@ -106,12 +106,15 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
         <TouchableOpacity style={styles.touchableOpacity} onPress={requestCoil}>
           <Text style={{ color: "white", fontWeight: 600 }}>보급요구</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.touchableOpacity} onPress={rejectCoil}>
+        <TouchableOpacity
+          style={[styles.touchableOpacity, { backgroundColor: "#F5004F" }]}
+          onPress={rejectCoil}
+        >
           <Text style={{ color: "white", fontWeight: 600 }}>REJECT</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.touchableOpacity}>
+        {/* <TouchableOpacity style={styles.touchableOpacity}>
           <Text style={{ color: "white", fontWeight: 600 }}>긴급정지</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
   touchableOpacity: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2caffe",
+    backgroundColor: "#1677FF",
     height: "20%",
     borderRadius: 6,
   },

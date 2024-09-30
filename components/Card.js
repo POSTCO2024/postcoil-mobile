@@ -4,27 +4,32 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { url } from "../config/Url";
-export const Card = ({ error, getErrors }) => {
-  const [text, setText] = useState(error.order.remarks);
+import { err } from "react-native-svg";
 
-  async function postComments(id, comment) {
-    console.log(id + "     " + comment);
-    try {
-      const response = await axios.post(
-        url + "/api/v1/target-materials/comment/" + id,
-        {
-          comment: comment,
-        }
-      );
-      getErrors("1CAL");
-    } catch (errors) {
-      console.log(errors);
-    }
-  }
+const deviceWidth = Dimensions.get("window").width;
+
+export const Card = ({ error }) => {
+  const [text, setText] = useState("");
+
+  // async function postComments(id, comment) {
+  //   console.log(id + "     " + comment);
+  //   try {
+  //     const response = await axios.post(
+  //       url + "/api/v1/target-materials/comment/" + id,
+  //       {
+  //         comment: comment,
+  //       }
+  //     );
+  //     getErrors("1CAL");
+  //   } catch (errors) {
+  //     console.log(errors);
+  //   }
+  // }
 
   const color = (errorType) => {
     switch (errorType) {
@@ -38,7 +43,7 @@ export const Card = ({ error, getErrors }) => {
   };
 
   const errorColor = color(error.errorType);
-  console.log(text);
+  // console.log(text);
   return (
     <View style={styles.card}>
       <View style={styles.materialView}>
@@ -65,10 +70,22 @@ export const Card = ({ error, getErrors }) => {
           <Text style={[styles.info, { fontWeight: 800 }]}>
             공정 : {error.material.currProc}
           </Text>
-          <Text style={styles.infoColor}>{error.order.no}</Text>
-          <Text style={styles.info}>{error.order.customer}</Text>
+
+          <Text
+            style={[
+              styles.infoColor,
+              !error.order && { color: "red", fontWeight: 800 },
+            ]}
+          >
+            {error.order
+              ? `주문번호 : ${error.order.no}`
+              : "주문이 존재하지 않습니다"}
+          </Text>
+          <Text style={styles.info}>
+            고객사 : {error.order ? error.order.customer : ""}
+          </Text>
           <Text style={styles.infoColor}>
-            생산 기한일 : {error.order.dueDate.split(" ")[0]}
+            생산 기한일 : {error.order ? error.order.dueDate.split(" ")[0] : ""}
           </Text>
           <Text style={styles.info}>
             코일 타입 : {error.material.coilTypeCode}
@@ -97,7 +114,7 @@ export const Card = ({ error, getErrors }) => {
         />
         <TouchableOpacity
           style={styles.enrollBtn}
-          onPress={() => postComments(error.material.id, text)}
+          // onPress={() => postComments(error.material.id, text)}
         >
           <Text
             style={{
@@ -174,21 +191,21 @@ const styles = StyleSheet.create({
   },
   facilityError: {
     backgroundColor: "#A7C7E7",
-    width: "30%",
+    width: deviceWidth > 500 ? "30%" : "35%",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
   },
   managementError: {
     backgroundColor: "#FFB3B3",
-    width: "30%",
+    width: deviceWidth > 500 ? "30%" : "35%",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
   },
   infoError: {
     backgroundColor: "#FFF597",
-    width: "30%",
+    width: deviceWidth > 500 ? "30%" : "35%",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
