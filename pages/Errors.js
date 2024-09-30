@@ -91,7 +91,7 @@ export default function Errors() {
         >
           {error ? (
             error.map((item) => (
-              <Card key={item.material.no} error={item} /> // 오류가 없을 때만 Card를 렌더링합니다.
+              <Card key={item.material.no} error={item} getErrors={getErrors} /> // 오류가 없을 때만 Card를 렌더링합니다.
             ))
           ) : (
             <></>
