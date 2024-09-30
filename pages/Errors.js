@@ -20,28 +20,31 @@ export default function Errors() {
     { label: "2CGL", value: "2CGL" },
   ];
 
-  const firstError = datas.result.filter(
-    (item) => item.isError === "Y" && item.material.currProc === value
-  );
+  // const firstError = datas.result.filter(
+  //   (item) => item.isError === "Y" && item.material.currProc === value
+  // );
 
-  const [error, setError] = useState(firstError);
+  const [error, setError] = useState(null);
 
   async function getErrors(facility) {
     try {
       const response = await axios.get(
-        url + "/api/v1/target-materials/error-by-curr-proc?currProc=" + value
+        url +
+          "/api/v1/control/error-materials/error-by-curr-proc?currProc=" +
+          facility
       );
       setError(response.data.result);
+      console.log(response.data.result);
     } catch (errors) {
       console.log(errors);
     }
   }
 
-  // useEffect(() => {
-  //   getErrors("1CAL");
-  //   const filteredData = datas.result.filter((item) => item.isError === "Y");
-  //   setError(filteredData);
-  // }, []);
+  useEffect(() => {
+    getErrors("1CAL");
+    // const filteredData = datas.result.filter((item) => item.isError === "Y");
+    // setError(filteredData);
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -67,12 +70,13 @@ export default function Errors() {
                 setOpen={setOpen}
                 setValue={setValue}
                 onSelectItem={(item) => {
-                  const facilityData = datas.result.filter(
-                    (data) =>
-                      data.material.currProc === item.value &&
-                      data.isError === "Y"
-                  );
-                  setError(facilityData);
+                  // const facilityData = datas.result.filter(
+                  //   (data) =>
+                  //     data.material.currProc === item.value &&
+                  //     data.isError === "Y"
+                  // );
+                  // setError(facilityData);
+                  getErrors(item.value);
                 }}
                 style={{ borderWidth: 1, borderColor: "#EBEBEB" }}
                 dropDownContainerStyle={{
@@ -91,7 +95,12 @@ export default function Errors() {
         >
           {error ? (
             error.map((item) => (
-              <Card key={item.material.no} error={item} getErrors={getErrors} /> // 오류가 없을 때만 Card를 렌더링합니다.
+              <Card
+                key={item.material.no}
+                error={item}
+                getErrors={getErrors}
+                value={value}
+              /> // 오류가 없을 때만 Card를 렌더링합니다.
             ))
           ) : (
             <></>

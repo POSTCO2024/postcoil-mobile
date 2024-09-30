@@ -13,23 +13,24 @@ import { err } from "react-native-svg";
 
 const deviceWidth = Dimensions.get("window").width;
 
-export const Card = ({ error }) => {
-  const [text, setText] = useState("");
-
-  // async function postComments(id, comment) {
-  //   console.log(id + "     " + comment);
-  //   try {
-  //     const response = await axios.post(
-  //       url + "/api/v1/target-materials/comment/" + id,
-  //       {
-  //         comment: comment,
-  //       }
-  //     );
-  //     getErrors("1CAL");
-  //   } catch (errors) {
-  //     console.log(errors);
-  //   }
-  // }
+export const Card = ({ error, getErrors, value }) => {
+  const [text, setText] = useState(error.remarks);
+  console.log(error);
+  async function postComments(id, comment, materialNo) {
+    console.log(id + "     " + comment);
+    try {
+      const response = await axios.post(
+        url + "/api/v1/control/error-materials/comment/" + id,
+        {
+          comment: comment,
+          materialNo: materialNo,
+        }
+      );
+      getErrors(value);
+    } catch (errors) {
+      console.log(errors);
+    }
+  }
 
   const color = (errorType) => {
     switch (errorType) {
@@ -110,11 +111,13 @@ export const Card = ({ error }) => {
           style={styles.input}
           multiline={true}
           onChangeText={(a) => setText(a)}
-          value={text}
+          value={text != "null" ? text : ""}
         />
         <TouchableOpacity
           style={styles.enrollBtn}
-          // onPress={() => postComments(error.material.id, text)}
+          onPress={() =>
+            postComments(error.material.id, text, error.material.no)
+          }
         >
           <Text
             style={{
