@@ -32,12 +32,13 @@ export const TableChart = ({ facility }) => {
   const postSize = 10;
 
   useEffect(() => {
-    const filteredData = datas.result.filter(
-      (item) => item.isError === "N" && item.material.currProc === facility
-    );
+    getNormals("1CAL");
+    // const filteredData = datas.result.filter(
+    //   (item) => item.isError === "N" && item.material.currProc === facility
+    // );
     setCurrentPage(1);
-    setNormals(filteredData);
-    updatePageRange(filteredData.length);
+    // setNormals(filteredData);
+    // updatePageRange(filteredData.length);
   }, [facility]);
   const indexOfLastPost = currentPage * postSize;
   const indexOfFirstPost = indexOfLastPost - postSize;
