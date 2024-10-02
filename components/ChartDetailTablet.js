@@ -58,7 +58,7 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>예상시간 : </Text>
-            {materialDetail ? materialDetail.expectedItemDuration : ""} 분
+            {materialDetail ? materialDetail.expectedItemDuration + " 분" : ""}
           </Text>
         </View>
       </View>

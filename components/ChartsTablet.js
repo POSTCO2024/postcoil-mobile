@@ -4,10 +4,13 @@ import { BarChart } from "react-native-gifted-charts";
 import { datas } from "./Data";
 import ChartDetailTablet from "./ChartDetailTablet";
 
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 export const ChartsTablet = ({ data }) => {
   console.log(data);
   const barData = data;
   const barDataItems = data.items.sort((a, b) => a.sequence - b.sequence);
+  const barCount = data.items.length;
   const barWidth = barDataItems.map((coil) => ({
     id: coil.materialId,
     value: coil.initialGoalWidth,
@@ -16,9 +19,10 @@ export const ChartsTablet = ({ data }) => {
   const barThickness = barDataItems.map((coil) => ({
     id: coil.materialId,
     value:
-      coil.initialThickness > 0
-        ? coil.initialThickness
-        : -coil.initialThickness,
+      // coil.initialThickness > 0
+      //   ? coil.initialThickness
+      //   : -coil.initialThickness,
+      coil.initialThickness,
     frontColor: "#9acd32",
   }));
   const [topChartData, setTopChartData] = useState(barWidth);
@@ -73,26 +77,25 @@ export const ChartsTablet = ({ data }) => {
           horizontal={true}
           contentContainerStyle={{ flexDirection: "column" }}
         >
-          <View style={{ zIndex: 999 }}>
-            <BarChart
-              data={topChartData}
-              barWidth={Dimensions.get("window").width * 0.07}
-              height={Dimensions.get("window").height * 0.23}
-              barBorderTopLeftRadius={4}
-              barBorderTopRightRadius={4}
-              barBorderWidth={1}
-              barBorderColor={"white"}
-              spacing={0}
-              onPress={(item, index) => handleBarPress(item, index)}
-              disableScroll={true}
-              yAxisThickness={0}
-              xAxisLabelsHeight={0}
-              maxValue={1800}
-              yAxisColor={"#262627"}
-              noOfSections={6}
-              initialSpacing={10}
-            />
-          </View>
+          <BarChart
+            data={topChartData}
+            width={screenWidth * 0.07 * (barCount + 1)}
+            barWidth={screenWidth * 0.07}
+            height={screenHeight * 0.23}
+            barBorderTopLeftRadius={4}
+            barBorderTopRightRadius={4}
+            barBorderWidth={1}
+            barBorderColor={"white"}
+            spacing={0}
+            onPress={(item, index) => handleBarPress(item, index)}
+            yAxisThickness={0}
+            xAxisLabelsHeight={0}
+            maxValue={1800}
+            yAxisColor={"#262627"}
+            noOfSections={6}
+            initialSpacing={10}
+            showScrollIndicator={true}
+          />
           <View
             style={{
               marginTop: -10,
@@ -102,8 +105,9 @@ export const ChartsTablet = ({ data }) => {
           >
             <BarChart
               data={bottomChartData}
-              barWidth={Dimensions.get("window").width * 0.07}
-              height={Dimensions.get("window").height * 0.23}
+              width={screenWidth * 0.07 * (barCount + 1)}
+              barWidth={screenWidth * 0.07}
+              height={screenHeight * 0.23}
               barBorderTopLeftRadius={4}
               barBorderTopRightRadius={4}
               barBorderWidth={1}
@@ -112,13 +116,14 @@ export const ChartsTablet = ({ data }) => {
               onPress={(item, index) => handleBarPress(item, index)}
               disableScroll={true}
               yAxisThickness={0}
-              mostNegativeValue={0}
               yAxisTextStyle={{ transform: [{ rotateX: "180deg" }] }}
               xAxisLabelsHeight={0}
-              maxValue={8}
               yAxisColor={"#262627"}
-              noOfSections={6}
               initialSpacing={10}
+              noOfSections={6}
+              maxValue={3}
+              yAxisLabelTexts={["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0"]}
+              xAxisLabelsVerticalShift={-60}
             />
           </View>
         </ScrollView>

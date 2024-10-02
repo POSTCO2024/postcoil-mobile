@@ -2,8 +2,36 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-export const ChartDetailMobile = ({ materialDetail }) => {
+export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
   console.log(materialDetail);
+
+  const requestCoil = async () => {
+    try {
+      const response = await axios.post(
+        operationUrl +
+          "/api/coil-work/request-supply/" +
+          workInstructionId +
+          "?supplyCount=1"
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
+  const rejectCoil = async () => {
+    try {
+      const response = await axios.post(
+        operationUrl +
+          "/api/coil-work/reject/" +
+          workInstructionId +
+          "/" +
+          materialDetail.id
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
   return (
     <View
       style={{
@@ -16,25 +44,26 @@ export const ChartDetailMobile = ({ materialDetail }) => {
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>코일번호 : </Text>
-            {materialDetail ? materialDetail.material.no : " "}
+            {materialDetail ? materialDetail.materialNo : " "}
           </Text>
         </View>
         <View style={styles.rowStyle}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>
-              생산기한일 :{" "}
-            </Text>
-            {materialDetail ? materialDetail.order.dueDate.split(" ")[0] : " "}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>단중 : </Text>
+            {materialDetail ? materialDetail.weight : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>롤유닛 : </Text>
-            {materialDetail ? materialDetail.rollUnitName : ""}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>예상시간 : </Text>
+            {materialDetail ? materialDetail.expectedItemDuration + " 분" : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <TouchableOpacity style={styles.touchableOpacity}>
+          <TouchableOpacity
+            style={styles.touchableOpacity}
+            onPress={requestCoil}
+          >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
               보급요구
             </Text>
@@ -44,50 +73,51 @@ export const ChartDetailMobile = ({ materialDetail }) => {
       <View style={{ flexDirection: "column", flex: 1, marginLeft: "3%" }}>
         <View style={styles.rowStyle}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>현공정 : </Text>
-            {materialDetail ? materialDetail.material.currProc : ""}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>전공정 : </Text>
+            {materialDetail ? materialDetail.preProc : ""}
           </Text>
         </View>
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>후공정 : </Text>
-            {materialDetail ? materialDetail.material.nextProc : ""}
+            {materialDetail ? materialDetail.nextProc : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>온도 : </Text>
-            {materialDetail ? materialDetail.material.temperature : ""}
+            {materialDetail ? materialDetail.temperature : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           {/* <TouchableOpacity style={styles.touchableOpacity}>
-            <Text style={{ color: "white", fontWeight: 600 }}>REJECT</Text>
+            <Text style={{ color: "white", fontWeight: 600 }}>긴급정지</Text>
           </TouchableOpacity> */}
         </View>
       </View>
       <View style={{ flexDirection: "column", flex: 1, marginLeft: "3%" }}>
         <View style={styles.rowStyle}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>폭 : </Text>
-            {materialDetail ? materialDetail.material.width : ""}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>목표폭 : </Text>
+            {materialDetail ? materialDetail.initialGoalWidth : ""}
           </Text>
         </View>
         <View style={styles.rowStyle}>
           <Text>
             <Text style={{ fontWeight: 700, lineHeight: 20 }}>두께 : </Text>
-            {materialDetail ? materialDetail.material.thickness : ""}
+            {materialDetail ? materialDetail.initialThickness : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>
-            <Text style={{ fontWeight: 700, lineHeight: 20 }}>단중 : </Text>
-            {materialDetail ? materialDetail.material.weight : ""}
+            <Text style={{ fontWeight: 700, lineHeight: 20 }}>길이 : </Text>
+            {materialDetail ? materialDetail.length : ""}
           </Text>
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity
             style={[styles.touchableOpacity, { backgroundColor: "#F5004F" }]}
+            onPress={rejectCoil}
           >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
               REJECT

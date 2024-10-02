@@ -5,6 +5,7 @@ import ChartsMobile from "../components/ChartsMobile";
 import DropDownPicker from "react-native-dropdown-picker";
 import axios from "axios";
 import { operationUrl } from "../config/Url";
+import { mockChartData } from "../components/Data";
 
 const deviceWidth = Dimensions.get("window").width;
 export const WorkInstruction = () => {
@@ -21,12 +22,14 @@ export const WorkInstruction = () => {
   const [selectedScheduleData, setSelectedScheduleData] = useState(null);
   const getInstrucions = async (process) => {
     try {
-      const response = await axios.get(
-        operationUrl +
-          "/api/v2/work-instructions/uncompleted?process=" +
-          process
-      );
-      const instructions = response.data.result;
+      // const response = await axios.get(
+      //   operationUrl +
+      //     "/api/v2/work-instructions/uncompleted?process=" +
+      //     process
+      // );
+      // const result = response.data.result;
+      const result = mockChartData;
+      const instructions = result.map((item) => item.workInstructions);
       console.log(instructions);
       setScheduleList(instructions);
       setSchedule(

@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../config/Url";
-import { err } from "react-native-svg";
 
 const deviceWidth = Dimensions.get("window").width;
 

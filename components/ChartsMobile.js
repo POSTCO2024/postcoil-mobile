@@ -1,22 +1,24 @@
 import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import { datas } from "./Data";
 import ChartDetailMobile from "./ChartDetailMobile";
 
-export const ChartsMobile = () => {
-  const barData = datas.result.slice(0, 50);
-  const barWidth = barData.map((coil) => ({
-    id: coil.material.id,
-    value: coil.material.width,
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+export const ChartsMobile = ({ data }) => {
+  console.log(data);
+  const barData = data;
+  const barDataItems = data.items.sort((a, b) => a.sequence - b.sequence);
+  const barCount = data.items.length;
+  const barWidth = barDataItems.map((coil) => ({
+    id: coil.materialId,
+    value: coil.initialGoalWidth,
     frontColor: "#9acd32",
   }));
-  const barThickness = barData.map((coil) => ({
-    id: coil.material.id,
-    value:
-      coil.material.thickness > 0
-        ? coil.material.thickness
-        : -coil.material.thickness,
+  const barThickness = barDataItems.map((coil) => ({
+    id: coil.materialId,
+    value: coil.initialThickness,
     frontColor: "#9acd32",
   }));
   const [topChartData, setTopChartData] = useState(barWidth);
@@ -25,7 +27,7 @@ export const ChartsMobile = () => {
   const [materialDetail, setMaterialDetail] = useState();
 
   const handleBarPress = (item, index) => {
-    setMaterialDetail(barData[index]);
+    setMaterialDetail(barDataItems[index]);
     const updateTopData = [...topChartData];
     updateTopData[index] = { ...topChartData[index], frontColor: "#2caffe" };
     const updateBottomData = [...bottomChartData];
@@ -48,6 +50,14 @@ export const ChartsMobile = () => {
     setBottomChartData(updateBottomData);
   };
 
+  // 스케줄 데이터가 바뀔 때마다 차트 데이터를 업데이트하는 useEffect
+  useEffect(() => {
+    setTopChartData(barWidth);
+    setBottomChartData(barThickness);
+    setClickedBar(null); // 새 스케줄로 바뀔 때 클릭된 막대 초기화
+    setMaterialDetail(null); // 새 스케줄로 바뀔 때 상세 정보 초기화
+  }, [data]);
+
   return (
     <View
       style={{
@@ -63,26 +73,25 @@ export const ChartsMobile = () => {
           horizontal={true}
           contentContainerStyle={{ flexDirection: "column" }}
         >
-          <View style={{ zIndex: 999 }}>
-            <BarChart
-              data={topChartData}
-              barWidth={Dimensions.get("window").width * 0.09}
-              height={Dimensions.get("window").height * 0.23}
-              barBorderTopLeftRadius={4}
-              barBorderTopRightRadius={4}
-              barBorderWidth={1}
-              barBorderColor={"white"}
-              spacing={0}
-              onPress={(item, index) => handleBarPress(item, index)}
-              disableScroll={true}
-              yAxisThickness={0}
-              xAxisLabelsHeight={0}
-              maxValue={1800}
-              yAxisColor={"#262627"}
-              noOfSections={6}
-              initialSpacing={10}
-            />
-          </View>
+          <BarChart
+            data={topChartData}
+            width={screenWidth * 0.09 * (barCount + 2)}
+            barWidth={screenWidth * 0.09}
+            height={screenHeight * 0.23}
+            barBorderTopLeftRadius={4}
+            barBorderTopRightRadius={4}
+            barBorderWidth={1}
+            barBorderColor={"white"}
+            spacing={0}
+            onPress={(item, index) => handleBarPress(item, index)}
+            disableScroll={true}
+            yAxisThickness={0}
+            xAxisLabelsHeight={0}
+            maxValue={1800}
+            yAxisColor={"#262627"}
+            noOfSections={6}
+            initialSpacing={10}
+          />
           <View
             style={{
               marginTop: -10,
@@ -92,8 +101,9 @@ export const ChartsMobile = () => {
           >
             <BarChart
               data={bottomChartData}
-              barWidth={Dimensions.get("window").width * 0.09}
-              height={Dimensions.get("window").height * 0.23}
+              width={screenWidth * 0.09 * (barCount + 2)}
+              barWidth={screenWidth * 0.09}
+              height={screenHeight * 0.23}
               barBorderTopLeftRadius={4}
               barBorderTopRightRadius={4}
               barBorderWidth={1}
@@ -105,16 +115,21 @@ export const ChartsMobile = () => {
               mostNegativeValue={0}
               yAxisTextStyle={{ transform: [{ rotateX: "180deg" }] }}
               xAxisLabelsHeight={0}
-              maxValue={8}
+              maxValue={3}
               yAxisColor={"#262627"}
               noOfSections={6}
               initialSpacing={10}
+              yAxisLabelTexts={["0", "0.5", "1.0", "1.5", "2.0", "2.5", "3.0"]}
+              xAxisLabelsVerticalShift={-60}
             />
           </View>
         </ScrollView>
       </View>
       <View style={styles.chartDetailContainer}>
-        <ChartDetailMobile materialDetail={materialDetail} />
+        <ChartDetailMobile
+          materialDetail={materialDetail}
+          workInstructionId={barData.id}
+        />
       </View>
     </View>
   );
