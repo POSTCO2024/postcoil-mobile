@@ -5,7 +5,9 @@ import ChartsMobile from "../components/ChartsMobile";
 import DropDownPicker from "react-native-dropdown-picker";
 import axios from "axios";
 import { operationUrl } from "../config/Url";
-import { mockChartData } from "../components/Data";
+import { mockChartData, realMockData } from "../components/Data";
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 
 const deviceWidth = Dimensions.get("window").width;
 export const WorkInstruction = () => {
@@ -20,6 +22,9 @@ export const WorkInstruction = () => {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [scheduleValue, setScheduleValue] = useState();
   const [selectedScheduleData, setSelectedScheduleData] = useState(null);
+  const [webSocketMessage, setWebSocketMessage] = useState(null);
+  const [client, setClient] = useState(null);
+  const [coilSupply, setCoilSupply] = useState(null);
   const getInstrucions = async (process) => {
     try {
       // const response = await axios.get(
@@ -29,7 +34,9 @@ export const WorkInstruction = () => {
       // );
       // const result = response.data.result;
       const result = mockChartData;
-      const instructions = result.map((item) => item.workInstructions);
+      const instructions = result.map((item) => {
+        return { ...item.workInstructions, coilSupply: item.coilSupply };
+      });
       console.log(instructions);
       setScheduleList(instructions);
       setSchedule(
@@ -40,6 +47,7 @@ export const WorkInstruction = () => {
       );
       setScheduleValue(instructions[0].scheduleNo);
       setSelectedScheduleData(instructions[0]);
+      setCoilSupply(instructions[0].coilSupply);
     } catch (errors) {
       console.log(errors);
     }
@@ -49,13 +57,72 @@ export const WorkInstruction = () => {
     getInstrucions("1CAL");
   }, []);
 
+  useEffect(() => {
+    const socket = new SockJS(operationUrl + "/ws/operation");
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log("연결되었습니다");
+        stompClient.subscribe("/topic/work-instruction", (msg) => {
+          const parsedMessage = JSON.parse(msg.body);
+          setWebSocketMessage(parsedMessage);
+        });
+      },
+      onDisconnect: () => {
+        console.log("Disconnected from WebSocket");
+      },
+      onStompError: (error) => {
+        console.error("STOMP error: ", error);
+      },
+    });
+    stompClient.activate();
+    setClient(stompClient);
+    console.log("client : " + client);
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
+  }, []);
+
   // 선택된 스케줄 찾기
   const selectedSchedule = (name) => {
     const finded = scheduleList.find(
       (schedule) => schedule.scheduleNo === name
     );
     setSelectedScheduleData(finded);
+    setCoilSupply(finded.coilSupply);
   };
+
+  useEffect(() => {
+    // console.log(parsedMessage);
+    if (
+      webSocketMessage &&
+      webSocketMessage.length > 0 &&
+      selectedScheduleData
+    ) {
+      // console.log("webSocketMessge : " + JSON.stringify(webSocketMessage));
+      // console.log("selectedSchedule : " + JSON.stringify(selectedScheduleData));
+      // console.log("scheduleValue : " + scheduleValue);
+      const filteredInstruction = webSocketMessage.filter((instruction) => {
+        return instruction.workInstructions.scheduleNo === scheduleValue;
+      });
+      console.log(
+        "filteredInstruction: " + JSON.stringify(filteredInstruction)
+      );
+      if (filteredInstruction.length > 0) {
+        console.log(
+          "workInstructions: " + filteredInstruction[0].workInstructions
+        );
+        console.log(selectedScheduleData);
+        console.log("coilSupply :" + filteredInstruction[0].coilSupply);
+      }
+    }
+  }, [webSocketMessage]);
 
   return (
     <View style={{ flex: 1 }}>

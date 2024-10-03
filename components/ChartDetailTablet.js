@@ -3,11 +3,31 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import axios from "axios";
 import { operationUrl } from "../config/Url";
+import Toast from "react-native-toast-message";
 
 export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
-  console.log(materialDetail);
-  console.log("workInstructionId    " + workInstructionId);
+  // console.log(materialDetail);
+  // console.log("workInstructionId    " + workInstructionId);
   const requestCoil = async () => {
+    let message = null;
+    switch (materialDetail.workItemStatus) {
+      case "COMPLETED":
+        message = "이미 작업완료된 코일입니다";
+        break;
+      case "IN_PROGRESS":
+        message = "작업중인 코일입니다";
+        break;
+    }
+    if (materialDetail.isRejected === "Y") {
+      message = "REJECT된 코일입니다";
+    }
+    if (message) {
+      Toast.show({
+        type: "error",
+        text1: message,
+      });
+      return;
+    }
     try {
       const response = await axios.post(
         operationUrl +
@@ -21,6 +41,25 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
   };
 
   const rejectCoil = async () => {
+    let message = null;
+    switch (materialDetail.workItemStatus) {
+      case "COMPLETED":
+        message = "이미 작업완료된 코일입니다";
+        break;
+      case "IN_PROGRESS":
+        message = "작업중인 코일입니다";
+        break;
+    }
+    if (materialDetail.isRejected === "Y") {
+      message = "REJECT된 코일입니다";
+    }
+    if (message) {
+      Toast.show({
+        type: "error",
+        text1: message,
+      });
+      return;
+    }
     try {
       const response = await axios.post(
         operationUrl +
