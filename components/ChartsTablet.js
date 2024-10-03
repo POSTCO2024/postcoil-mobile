@@ -8,6 +8,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 export const ChartsTablet = ({ data }) => {
   // console.log("ChartTablet data : " + JSON.stringify(data));
+  console.log(data);
   const coilSupply = data.coilSupply;
   const barData = data;
   const barDataItems = data.items.sort((a, b) => a.sequence - b.sequence);
@@ -112,6 +113,7 @@ export const ChartsTablet = ({ data }) => {
     setTopChartData(barWidth);
     setBottomChartData(barThickness);
     setClickedBar(null); // 새 스케줄로 바뀔 때 클릭된 막대 초기화
+    setClickedBarColor(null);
     setMaterialDetail(null); // 새 스케줄로 바뀔 때 상세 정보 초기화
   }, [data]);
 
@@ -184,7 +186,7 @@ export const ChartsTablet = ({ data }) => {
       <View style={styles.chartDetailContainer}>
         <ChartDetailTablet
           materialDetail={materialDetail}
-          workInstructionId={barData.id}
+          workInstructionId={barData.workInstructionId}
         />
       </View>
     </View>

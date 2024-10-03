@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
+import Toast from "react-native-toast-message";
 
 export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
   console.log(materialDetail);
@@ -19,6 +20,29 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
   };
 
   const rejectCoil = async () => {
+    let message = null;
+    switch (materialDetail.workItemStatus) {
+      case "COMPLETED":
+        message = "이미 작업완료된 코일입니다";
+        break;
+      case "IN_PROGRESS":
+        message = "작업중인 코일입니다";
+        break;
+    }
+    if (materialDetail.isRejected === "Y") {
+      message = "REJECT된 코일입니다";
+    }
+    if (message) {
+      Toast.show({
+        type: "error",
+        text1: message,
+        position: "bottom",
+        bottomOffset: 100,
+        text1Style: { fontWeight: 600, fontSize: 16 },
+      });
+
+      return;
+    }
     try {
       const response = await axios.post(
         operationUrl +
@@ -62,7 +86,7 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
         <View style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity
             style={styles.touchableOpacity}
-            onPress={requestCoil}
+            onPress={materialDetail ? requestCoil : null}
           >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
               보급요구
@@ -117,7 +141,7 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
         <View style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity
             style={[styles.touchableOpacity, { backgroundColor: "#F5004F" }]}
-            onPress={rejectCoil}
+            onPress={materialDetail ? rejectCoil : null}
           >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
               REJECT

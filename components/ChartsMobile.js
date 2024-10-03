@@ -8,44 +8,97 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 export const ChartsMobile = ({ data }) => {
   console.log(data);
+  const coilSupply = data.coilSupply;
   const barData = data;
   const barDataItems = data.items.sort((a, b) => a.sequence - b.sequence);
   const barCount = data.items.length;
-  const barWidth = barDataItems.map((coil) => ({
-    id: coil.materialId,
-    value: coil.initialGoalWidth,
-    frontColor: "#9acd32",
-  }));
-  const barThickness = barDataItems.map((coil) => ({
-    id: coil.materialId,
-    value: coil.initialThickness,
-    frontColor: "#9acd32",
-  }));
+  let suppliedCnt = 0;
+  const barWidth = barDataItems.map((coil) => {
+    let color;
+    switch (coil.workItemStatus) {
+      case "COMPLETED":
+        color = "#b3b3b3";
+        break;
+      case "PENDING":
+        if (coilSupply.suppliedCoils > suppliedCnt) {
+          color = "#9acd32";
+          suppliedCnt++;
+        } else {
+          color = "#2caffe";
+        }
+        if (coil.isRejected === "Y") {
+          color = "#F5004F";
+        }
+        break;
+      case "IN_PROGRESS":
+        color = "#9acd32";
+        suppliedCnt++;
+        break;
+    }
+    return {
+      id: coil.materialId,
+      value: coil.initialGoalWidth,
+      frontColor: color,
+    };
+  });
+  suppliedCnt = 0;
+  const barThickness = barDataItems.map((coil) => {
+    let color;
+    switch (coil.workItemStatus) {
+      case "COMPLETED":
+        color = "#b3b3b3";
+        break;
+      case "PENDING":
+        if (coilSupply.suppliedCoils > suppliedCnt) {
+          color = "#9acd32";
+          suppliedCnt++;
+        } else {
+          color = "#2caffe";
+        }
+        if (coil.isRejected === "Y") {
+          color = "#F5004F";
+        }
+        break;
+      case "IN_PROGRESS":
+        color = "#9acd32";
+        suppliedCnt++;
+        break;
+    }
+    return {
+      id: coil.materialId,
+      value: coil.initialThickness,
+      frontColor: color,
+    };
+  });
   const [topChartData, setTopChartData] = useState(barWidth);
   const [bottomChartData, setBottomChartData] = useState(barThickness);
   const [clickedBar, setClickedBar] = useState();
+  const [clickedBarColor, setClickedBarColor] = useState();
   const [materialDetail, setMaterialDetail] = useState();
 
   const handleBarPress = (item, index) => {
+    if (clickedBar === index) return;
+    console.log("itemClicked : " + JSON.stringify(item));
     setMaterialDetail(barDataItems[index]);
     const updateTopData = [...topChartData];
-    updateTopData[index] = { ...topChartData[index], frontColor: "#2caffe" };
+    updateTopData[index] = { ...topChartData[index], frontColor: "#ffd700" };
     const updateBottomData = [...bottomChartData];
     updateBottomData[index] = {
       ...bottomChartData[index],
-      frontColor: "#2caffe",
+      frontColor: "#ffd700",
     };
     if (index != clickedBar) {
       updateTopData[clickedBar] = {
         ...updateTopData[clickedBar],
-        frontColor: "#9acd32",
+        frontColor: clickedBarColor,
       };
       updateBottomData[clickedBar] = {
         ...updateBottomData[clickedBar],
-        frontColor: "#9acd32",
+        frontColor: clickedBarColor,
       };
     }
     setClickedBar(index);
+    setClickedBarColor(item.frontColor);
     setTopChartData(updateTopData);
     setBottomChartData(updateBottomData);
   };

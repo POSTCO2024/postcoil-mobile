@@ -6,28 +6,10 @@ import { operationUrl } from "../config/Url";
 import Toast from "react-native-toast-message";
 
 export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
-  // console.log(materialDetail);
-  // console.log("workInstructionId    " + workInstructionId);
+  console.log(workInstructionId);
+  console.log(materialDetail);
+
   const requestCoil = async () => {
-    let message = null;
-    switch (materialDetail.workItemStatus) {
-      case "COMPLETED":
-        message = "이미 작업완료된 코일입니다";
-        break;
-      case "IN_PROGRESS":
-        message = "작업중인 코일입니다";
-        break;
-    }
-    if (materialDetail.isRejected === "Y") {
-      message = "REJECT된 코일입니다";
-    }
-    if (message) {
-      Toast.show({
-        type: "error",
-        text1: message,
-      });
-      return;
-    }
     try {
       const response = await axios.post(
         operationUrl +
@@ -57,6 +39,10 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
       Toast.show({
         type: "error",
         text1: message,
+        position: "bottom",
+        bottomOffset: 200,
+        text1Style: { fontWeight: 600, fontSize: 20 },
+        swipeable: true,
       });
       return;
     }
@@ -66,7 +52,7 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
           "/api/coil-work/reject/" +
           workInstructionId +
           "/" +
-          materialDetail.id
+          materialDetail.workItemId
       );
     } catch (errors) {
       console.log(errors);
@@ -142,12 +128,15 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
         </View>
       </View>
       <View style={{ flex: 0.7, justifyContent: "space-around" }}>
-        <TouchableOpacity style={styles.touchableOpacity} onPress={requestCoil}>
+        <TouchableOpacity
+          style={styles.touchableOpacity}
+          onPress={workInstructionId ? requestCoil : null}
+        >
           <Text style={{ color: "white", fontWeight: 600 }}>보급요구</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.touchableOpacity, { backgroundColor: "#F5004F" }]}
-          onPress={rejectCoil}
+          onPress={workInstructionId && materialDetail ? rejectCoil : null}
         >
           <Text style={{ color: "white", fontWeight: 600 }}>REJECT</Text>
         </TouchableOpacity>

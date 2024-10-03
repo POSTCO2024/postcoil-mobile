@@ -27,17 +27,17 @@ export const WorkInstruction = () => {
   const [coilSupply, setCoilSupply] = useState(null);
   const getInstrucions = async (process) => {
     try {
-      // const response = await axios.get(
-      //   operationUrl +
-      //     "/api/v2/work-instructions/uncompleted?process=" +
-      //     process
-      // );
-      // const result = response.data.result;
-      const result = mockChartData;
+      const response = await axios.get(
+        operationUrl +
+          "/api/v2/work-instructions/uncompleted?process=" +
+          process
+      );
+      const result = response.data.result;
+      // const result = mockChartData;
       const instructions = result.map((item) => {
         return { ...item.workInstructions, coilSupply: item.coilSupply };
       });
-      console.log(instructions);
+      console.log("scheduleList: " + JSON.stringify(instructions));
       setScheduleList(instructions);
       setSchedule(
         instructions.map((item) => ({
@@ -114,12 +114,13 @@ export const WorkInstruction = () => {
       console.log(
         "filteredInstruction: " + JSON.stringify(filteredInstruction)
       );
+
       if (filteredInstruction.length > 0) {
-        console.log(
-          "workInstructions: " + filteredInstruction[0].workInstructions
-        );
-        console.log(selectedScheduleData);
-        console.log("coilSupply :" + filteredInstruction[0].coilSupply);
+        const instructions = filteredInstruction.map((item) => {
+          return { ...item.workInstructions, coilSupply: item.coilSupply };
+        });
+        setSelectedScheduleData(instructions[0]);
+        setCoilSupply(instructions[0].coilSupply);
       }
     }
   }, [webSocketMessage]);
@@ -148,7 +149,6 @@ export const WorkInstruction = () => {
                 setOpen={setOpen}
                 setValue={setValue}
                 onSelectItem={(item) => {
-                  console.log("onSelectItem");
                   getInstrucions(item.value);
                 }}
                 style={{ borderWidth: 1, borderColor: "#EBEBEB" }}
