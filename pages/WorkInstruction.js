@@ -177,7 +177,9 @@ export const WorkInstruction = () => {
                 setOpen={setScheduleOpen}
                 setValue={setScheduleValue}
                 // setSchedule={setSchedule}
-                onSelectItem={(item) => {
+                onSelectItem={async (item) => {
+                  await getInstrucions(value);
+                  setScheduleValue(item.value);
                   selectedSchedule(item.value);
                 }}
                 style={{

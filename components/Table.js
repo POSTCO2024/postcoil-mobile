@@ -94,7 +94,7 @@ export const TableChart = ({ facility }) => {
     try {
       const response = await axios.get(
         url +
-          "/api/v1/target-materials/normal-by-curr-proc?currProc=" +
+          "/api/v1/control/target-materials/normal-by-curr-proc?currProc=" +
           facility
       );
       setNormals(response.data.result);

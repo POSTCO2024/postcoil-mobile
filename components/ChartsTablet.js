@@ -21,7 +21,10 @@ export const ChartsTablet = ({ data }) => {
         color = "#b3b3b3";
         break;
       case "PENDING":
-        if (coilSupply.suppliedCoils > suppliedCnt) {
+        if (
+          coilSupply.suppliedCoils - coilSupply.totalProgressed >
+          suppliedCnt
+        ) {
           color = "#9acd32";
           suppliedCnt++;
         } else {
@@ -50,7 +53,10 @@ export const ChartsTablet = ({ data }) => {
         color = "#b3b3b3";
         break;
       case "PENDING":
-        if (coilSupply.suppliedCoils > suppliedCnt) {
+        if (
+          coilSupply.suppliedCoils - coilSupply.totalProgressed >
+          suppliedCnt
+        ) {
           color = "#9acd32";
           suppliedCnt++;
         } else {
@@ -187,6 +193,12 @@ export const ChartsTablet = ({ data }) => {
         <ChartDetailTablet
           materialDetail={materialDetail}
           workInstructionId={barData.workInstructionId}
+          endSuppliedCoils={
+            coilSupply.suppliedCoils ===
+            coilSupply.totalCoils - coilSupply.totalRejects
+              ? true
+              : false
+          }
         />
       </View>
     </View>

@@ -5,11 +5,24 @@ import axios from "axios";
 import { operationUrl } from "../config/Url";
 import Toast from "react-native-toast-message";
 
-export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
-  console.log(workInstructionId);
-  console.log(materialDetail);
-
+export const ChartDetailTablet = ({
+  materialDetail,
+  workInstructionId,
+  endSuppliedCoils,
+}) => {
   const requestCoil = async () => {
+    if (endSuppliedCoils) {
+      Toast.show({
+        type: "error",
+        text1: "보급할 코일이 존재하지 않습니다",
+        position: "bottom",
+        bottomOffset: 200,
+        text1Style: { fontWeight: 600, fontSize: 20 },
+        swipeable: true,
+      });
+      return;
+    }
+
     try {
       const response = await axios.post(
         operationUrl +
@@ -17,6 +30,7 @@ export const ChartDetailTablet = ({ materialDetail, workInstructionId }) => {
           workInstructionId +
           "?supplyCount=1"
       );
+      coilsupplied++;
     } catch (errors) {
       console.log(errors);
     }

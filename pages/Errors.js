@@ -41,7 +41,7 @@ export default function Errors() {
   }
 
   useEffect(() => {
-    // getErrors("1CAL");
+    getErrors("1CAL");
     // const filteredData = datas.result.filter((item) => item.isError === "Y");
     // setError(filteredData);
   }, []);
