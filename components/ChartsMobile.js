@@ -181,7 +181,13 @@ export const ChartsMobile = ({ data }) => {
       <View style={styles.chartDetailContainer}>
         <ChartDetailMobile
           materialDetail={materialDetail}
-          workInstructionId={barData.id}
+          workInstructionId={barData.workInstructionId}
+          endSuppliedCoils={
+            coilSupply.suppliedCoils ===
+            coilSupply.totalCoils - coilSupply.totalRejects
+              ? true
+              : false
+          }
         />
       </View>
     </View>

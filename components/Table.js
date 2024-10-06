@@ -32,7 +32,7 @@ export const TableChart = ({ facility }) => {
   const postSize = 10;
 
   useEffect(() => {
-    getNormals("1CAL");
+    getNormals(facility);
     // const filteredData = datas.result.filter(
     //   (item) => item.isError === "N" && item.material.currProc === facility
     // );

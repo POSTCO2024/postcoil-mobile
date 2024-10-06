@@ -1,10 +1,38 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { operationUrl } from "../config/Url";
 import { TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
-  console.log(materialDetail);
+export const ChartDetailMobile = ({
+  materialDetail,
+  workInstructionId,
+  endSuppliedCoils,
+}) => {
+  const [message, setMessage] = useState(null);
+
+  useEffect(() => {
+    if (materialDetail) {
+      let newMessage = null; // 새로운 메시지 임시 저장
+
+      switch (materialDetail.workItemStatus) {
+        case "COMPLETED":
+          newMessage = "이미 작업완료된 코일입니다";
+          break;
+        case "IN_PROGRESS":
+          newMessage = "작업중인 코일입니다";
+          break;
+      }
+      if (materialDetail.isRejected === "Y") {
+        newMessage = "REJECT된 코일입니다";
+      }
+
+      // 상태를 업데이트
+      setMessage(newMessage);
+    }
+  }, [materialDetail]);
 
   const requestCoil = async () => {
     try {
@@ -20,29 +48,6 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
   };
 
   const rejectCoil = async () => {
-    let message = null;
-    switch (materialDetail.workItemStatus) {
-      case "COMPLETED":
-        message = "이미 작업완료된 코일입니다";
-        break;
-      case "IN_PROGRESS":
-        message = "작업중인 코일입니다";
-        break;
-    }
-    if (materialDetail.isRejected === "Y") {
-      message = "REJECT된 코일입니다";
-    }
-    if (message) {
-      Toast.show({
-        type: "error",
-        text1: message,
-        position: "bottom",
-        bottomOffset: 100,
-        text1Style: { fontWeight: 600, fontSize: 16 },
-      });
-
-      return;
-    }
     try {
       const response = await axios.post(
         operationUrl +
@@ -56,6 +61,11 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
     }
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleVisible = () => setModalVisible(!modalVisible);
+  const [modalText, setModalText] = useState(null);
+  const [modalFunction, setModalFunction] = useState(null);
+
   return (
     <View
       style={{
@@ -64,6 +74,65 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
         flexDirection: "row",
       }}
     >
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          handleVisible();
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {modalText === "REJECT" ? (
+              <MaterialCommunityIcons name="alert" size={50} color="#F5004F" />
+            ) : (
+              <MaterialCommunityIcons
+                name="alarm-check"
+                size={50}
+                color="#2196F3"
+              />
+            )}
+            <Text style={{ fontSize: 20, fontWeight: 600, marginTop: "5%" }}>
+              {modalText} 하시겠습니까?
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: "10%",
+                width: "100%",
+                paddingHorizontal: "10%",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <Pressable
+                style={[styles.button]}
+                onPress={() => {
+                  handleVisible();
+                  modalFunction();
+                }}
+              >
+                <Text style={styles.textStyle}>예</Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: "#ffffff",
+                    borderWidth: 1,
+                    borderColor: "#D5D5D5",
+                  },
+                ]}
+                onPress={handleVisible}
+              >
+                <Text style={[styles.textStyle, { color: "#262627" }]}>
+                  아니요
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={{ flexDirection: "column", flex: 1 }}>
         <View style={styles.rowStyle}>
           <Text>
@@ -86,7 +155,27 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
         <View style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity
             style={styles.touchableOpacity}
-            onPress={materialDetail ? requestCoil : null}
+            // onPress={materialDetail ? requestCoil : null}
+            onPress={
+              workInstructionId
+                ? () => {
+                    if (endSuppliedCoils) {
+                      Toast.show({
+                        type: "error",
+                        text1: "보급할 코일이 존재하지 않습니다",
+                        position: "bottom",
+                        bottomOffset: 100,
+                        text1Style: { fontWeight: 600, fontSize: 20 },
+                        swipeable: true,
+                      });
+                      return;
+                    }
+                    handleVisible();
+                    setModalText("보급요구");
+                    setModalFunction(() => requestCoil);
+                  }
+                : null
+            }
           >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
               보급요구
@@ -141,7 +230,34 @@ export const ChartDetailMobile = ({ materialDetail, workInstructionId }) => {
         <View style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity
             style={[styles.touchableOpacity, { backgroundColor: "#F5004F" }]}
-            onPress={materialDetail ? rejectCoil : null}
+            // onPress={materialDetail ? rejectCoil : null}
+            onPress={
+              workInstructionId && materialDetail
+                ? () => {
+                    if (message) {
+                      Toast.show({
+                        type: "error",
+                        text1: message,
+                        position: "bottom",
+                        bottomOffset: 100,
+                        text1Style: { fontWeight: 600, fontSize: 16 },
+                      });
+                      return;
+                    }
+                    handleVisible();
+                    setModalText("REJECT");
+                    setModalFunction(() => rejectCoil);
+                  }
+                : () =>
+                    Toast.show({
+                      type: "error",
+                      text1: "코일을 선택해주세요",
+                      position: "bottom",
+                      bottomOffset: 100,
+                      text1Style: { fontWeight: 600, fontSize: 20 },
+                      swipeable: true,
+                    })
+            }
           >
             <Text style={{ color: "white", fontWeight: 600, lineHeight: 20 }}>
               REJECT
@@ -177,5 +293,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderBottomWidth: 1,
     borderColor: "#eeeeee",
+  },
+  centeredView: {
+    backgroundColor: "rgba(213, 213, 213, 0.6)",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: "70%",
+    marginTop: "10%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#2196F3",
+    width: "30%",
+  },
+
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
