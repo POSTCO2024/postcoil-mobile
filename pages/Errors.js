@@ -67,6 +67,7 @@ export default function Errors() {
                 open={open}
                 value={value}
                 items={items}
+                maxHeight={300}
                 setOpen={setOpen}
                 setValue={setValue}
                 onSelectItem={(item) => {

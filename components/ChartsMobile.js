@@ -7,7 +7,6 @@ import ChartDetailMobile from "./ChartDetailMobile";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 export const ChartsMobile = ({ data }) => {
-  console.log(data);
   const coilSupply = data.coilSupply;
   const barData = data;
   const barDataItems = data.items.sort((a, b) => a.sequence - b.sequence);

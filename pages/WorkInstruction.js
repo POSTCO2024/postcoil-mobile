@@ -27,13 +27,13 @@ export const WorkInstruction = () => {
   const [coilSupply, setCoilSupply] = useState(null);
   const getInstrucions = async (process) => {
     try {
-      // const response = await axios.get(
-      //   operationUrl +
-      //     "/api/v2/work-instructions/uncompleted?process=" +
-      //     process
-      // );
-      // const result = response.data.result;
-      const result = mockChartData;
+      const response = await axios.get(
+        operationUrl +
+          "/api/v2/work-instructions/uncompleted?process=" +
+          process
+      );
+      const result = response.data.result;
+      // const result = mockChartData;
       const instructions = result.map((item) => {
         return { ...item.workInstructions, coilSupply: item.coilSupply };
       });
