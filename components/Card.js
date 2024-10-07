@@ -8,7 +8,7 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { url } from "../config/Url";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -18,9 +18,13 @@ const deviceWidth = Dimensions.get("window").width;
 
 export const Card = ({ error, getErrors, value }) => {
   const [text, setText] = useState(error.remarks);
-  console.log(error);
+  console.log("Card error : " + JSON.stringify(error));
 
-  async function postComments(id, comment, materialNo) {
+  useEffect(() => {
+    setText(error.remarks);
+  }, [error]);
+
+  async function postComments(id, comment, materialNo, currProc) {
     console.log(id + "     " + comment);
     try {
       const response = await axios.post(
@@ -28,6 +32,7 @@ export const Card = ({ error, getErrors, value }) => {
         {
           comment: comment,
           materialNo: materialNo,
+          currProc: currProc,
         }
       );
       getErrors(value);
@@ -85,7 +90,12 @@ export const Card = ({ error, getErrors, value }) => {
                 style={[styles.button]}
                 onPress={() => {
                   handleVisible();
-                  postComments(error.material.id, text, error.material.no);
+                  postComments(
+                    error.material.id,
+                    text,
+                    error.material.no,
+                    error.material.currProc
+                  );
                 }}
               >
                 <Text style={styles.textStyle}>예</Text>
@@ -205,47 +215,47 @@ export const Card = ({ error, getErrors, value }) => {
           </Text>
         </TouchableOpacity>
       </View>
-
-      {/*수정 등록버튼 card */}
-      {/* <View
-        style={{
-          flexDirection: "row",
-          paddingBottom: "3%",
-          justifyContent: "space-between",
-        }}
-      > */}
-      {/* <TouchableOpacity
-          style={{
-            width: "49%",
-            borderWidth: 1,
-            borderRadius: 6,
-            borderColor: "#83DB89",
-            height: "100%",
-            paddingVertical: "1%",
-          }}
-        >
-          <Text
-            style={{ textAlign: "center", color: "#83DB89", fontWeight: 800 }}
-          >
-            수정
-          </Text>
-        </TouchableOpacity> */}
-      {/* <TouchableOpacity
-        style={{
-          width: "49%",
-          borderRadius: 6,
-          backgroundColor: "#83DB89",
-          height: "100%",
-          paddingVertical: "1%",
-        }}
-      >
-        <Text
-          style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
-        >
-          등록
-        </Text>
-      </TouchableOpacity> */}
     </View>
+    // {/*수정 등록버튼 card */}
+    // {/* <View
+    //   style={{
+    //     flexDirection: "row",
+    //     paddingBottom: "3%",
+    //     justifyContent: "space-between",
+    //   }}
+    // > */}
+    // {/* <TouchableOpacity
+    //     style={{
+    //       width: "49%",
+    //       borderWidth: 1,
+    //       borderRadius: 6,
+    //       borderColor: "#83DB89",
+    //       height: "100%",
+    //       paddingVertical: "1%",
+    //     }}
+    //   >
+    //     <Text
+    //       style={{ textAlign: "center", color: "#83DB89", fontWeight: 800 }}
+    //     >
+    //       수정
+    //     </Text>
+    //   </TouchableOpacity> */}
+    // {/* <TouchableOpacity
+    //   style={{
+    //     width: "49%",
+    //     borderRadius: 6,
+    //     backgroundColor: "#83DB89",
+    //     height: "100%",
+    //     paddingVertical: "1%",
+    //   }}
+    // >
+    //   <Text
+    //     style={{ textAlign: "center", color: "#ffffff", fontWeight: 800 }}
+    //   >
+    //     등록
+    //   </Text>
+    // </TouchableOpacity> */}
+
     // </View>
   );
 };

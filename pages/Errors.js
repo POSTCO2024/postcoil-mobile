@@ -2,16 +2,29 @@ import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import axios from "axios";
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 import { url } from "../config/Url";
 import { datas } from "../components/Data";
 import DropDownPicker from "react-native-dropdown-picker";
+import { TextDecoder } from "text-encoding";
 
 const deviceWidth = Dimensions.get("window").width;
+const TextEncodingPolyfill = require("text-encoding");
 
+Object.assign("global", {
+  TextEncoder: TextEncodingPolyfill.TextEncoder,
+  TextDecoder: TextEncodingPolyfill.TextDecoder,
+});
 export default function Errors() {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("1CAL");
+  const [value, setValue] = useState("1PCM");
+  const [client, setClient] = useState(null);
+  const [message, setMessage] = useState(null);
+
   const items = [
+    { label: "1PCM", value: "1PCM" },
+    { label: "2PCM", value: "2PCM" },
     { label: "1CAL", value: "1CAL" },
     { label: "2CAL", value: "2CAL" },
     { label: "1EGL", value: "1EGL" },
@@ -34,16 +47,56 @@ export default function Errors() {
           facility
       );
       setError(response.data.result);
-      console.log(response.data.result);
+      console.log("axios get : " + JSON.stringify(response.data.result));
     } catch (errors) {
       console.log(errors);
     }
   }
 
   useEffect(() => {
-    getErrors("1CAL");
+    getErrors("1PCM");
     // const filteredData = datas.result.filter((item) => item.isError === "Y");
     // setError(filteredData);
+  }, []);
+
+  useEffect(() => {
+    const socket = new SockJS(url + "/ws/control");
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log("연결되었습니다");
+        stompClient.subscribe("/topic/errorMessage", (msg) => {
+          const paredMessage = JSON.parse(msg.body);
+          console.log("paredMessage : " + JSON.stringify(paredMessage));
+
+          setError((prevErrorMaterials) =>
+            prevErrorMaterials.map((item) =>
+              item.material.no === paredMessage.materialNo
+                ? { ...item, remarks: paredMessage.comment } // 조건이 맞으면 새로운 객체 반환
+                : item
+            )
+          );
+        });
+      },
+      onDisconnect: () => {
+        console.log("Disconnected from WebSocket");
+      },
+      onStompError: (error) => {
+        console.error("STOMP error: ", error);
+      },
+    });
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
   }, []);
 
   return (
