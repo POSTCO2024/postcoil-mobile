@@ -22,7 +22,7 @@ const headerData = [
   "폭",
   "단중",
   "롤유닛",
-  "저장위치",
+  "야드",
 ];
 const deviceWidth = Dimensions.get("window").width;
 export const TableChart = ({ facility }) => {
@@ -81,10 +81,10 @@ export const TableChart = ({ facility }) => {
           item.order.thickness,
           item.material.thickness,
           item.order.width,
-          item.material.weight,
+          item.material.width,
           item.material.weight,
           item.rollUnitName,
-          item.material.storageLoc,
+          item.material.yard.replace(/A$/, "입측").replace(/B$/, "출측"),
         ];
       })
     : "";
@@ -97,6 +97,7 @@ export const TableChart = ({ facility }) => {
           "/api/v1/control/target-materials/normal-by-curr-proc?currProc=" +
           facility
       );
+      console.log(response.data.result);
       setNormals(response.data.result);
       updatePageRange(response.data.result.length);
     } catch (errors) {

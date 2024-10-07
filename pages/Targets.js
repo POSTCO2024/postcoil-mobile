@@ -6,8 +6,10 @@ import DropDownPicker from "react-native-dropdown-picker";
 const deviceWidth = Dimensions.get("window").width;
 export const Targets = () => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("1CAL");
+  const [value, setValue] = useState("1PCM");
   const items = [
+    { label: "1PCM", value: "1PCM" },
+    { label: "2PCM", value: "2PCM" },
     { label: "1CAL", value: "1CAL" },
     { label: "2CAL", value: "2CAL" },
     { label: "1EGL", value: "1EGL" },
