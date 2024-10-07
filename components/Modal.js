@@ -15,11 +15,11 @@ const ModalView = ({ modalVisible, handleVisible, text, modalFunction }) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {text === "REJECT" ? (
-            <MaterialCommunityIcons name="alert" size={"50%"} color="#F5004F" />
+            <MaterialCommunityIcons name="alert" size={50} color="#F5004F" />
           ) : (
             <MaterialCommunityIcons
               name="alarm-check"
-              size={"50%"}
+              size={50}
               color="#2196F3"
             />
           )}
@@ -100,5 +100,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  modalText: { fontSize: "20", fontWeight: 600, marginTop: "5%" },
+  modalText: { fontSize: 20, fontWeight: "600", marginTop: "5%" },
 });

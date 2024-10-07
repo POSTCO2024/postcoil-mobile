@@ -5,16 +5,21 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  Pressable,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
 import { url } from "../config/Url";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Toast from "react-native-toast-message";
 
 const deviceWidth = Dimensions.get("window").width;
 
 export const Card = ({ error, getErrors, value }) => {
   const [text, setText] = useState(error.remarks);
   console.log(error);
+
   async function postComments(id, comment, materialNo) {
     console.log(id + "     " + comment);
     try {
@@ -43,9 +48,67 @@ export const Card = ({ error, getErrors, value }) => {
   };
 
   const errorColor = color(error.errorType);
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleVisible = () => setModalVisible(!modalVisible);
   // console.log(text);
   return (
     <View style={styles.card}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          handleVisible();
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <MaterialCommunityIcons
+              name="comment-text-outline"
+              size={50}
+              color="#83DB89"
+            />
+            <Text style={{ marginTop: "5%" }}>"{text}"</Text>
+            <Text style={{ fontSize: 20, fontWeight: 600, marginTop: "5%" }}>
+              비고를 등록하시겠습니까?
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: "10%",
+                width: "100%",
+                paddingHorizontal: "10%",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <Pressable
+                style={[styles.button]}
+                onPress={() => {
+                  handleVisible();
+                  postComments(error.material.id, text, error.material.no);
+                }}
+              >
+                <Text style={styles.textStyle}>예</Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: "#ffffff",
+                    borderWidth: 1,
+                    borderColor: "#D5D5D5",
+                  },
+                ]}
+                onPress={handleVisible}
+              >
+                <Text style={[styles.textStyle, { color: "#262627" }]}>
+                  아니요
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.materialView}>
         <View>
           <Text style={[styles.materialNo, { fontWeight: 800 }]}>
@@ -114,9 +177,21 @@ export const Card = ({ error, getErrors, value }) => {
         />
         <TouchableOpacity
           style={styles.enrollBtn}
-          onPress={() =>
-            postComments(error.material.id, text, error.material.no)
-          }
+          onPress={() => {
+            if (text === "null" || text === "") {
+              Toast.show({
+                type: "error",
+                text1: "내용을 입력해주세요",
+                position: "bottom",
+                bottomOffset: 200,
+                text1Style: { fontWeight: 600, fontSize: 20 },
+                swipeable: true,
+              });
+              return;
+            }
+            handleVisible();
+            // postComments(error.material.id, text, error.material.no)
+          }}
         >
           <Text
             style={{
@@ -263,5 +338,38 @@ const styles = StyleSheet.create({
     backgroundColor: "#83DB89",
     height: "50%",
     paddingVertical: "1%",
+  },
+  centeredView: {
+    backgroundColor: "rgba(213, 213, 213, 0.6)",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: deviceWidth > 500 ? "40%" : "70%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingTop: "3%",
+    paddingBottom: "3%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#2196F3",
+    width: "30%",
+  },
+
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
